@@ -1,0 +1,14 @@
+body {
+    /* background: #ff0000 !important; */
+}
+
+#vr-button {
+    display: block;
+    padding: 0.6em 0.9em;
+    border: 2px solid #ff9339;
+    border-radius: 4px;
+
+    text-decoration: none;
+    font-family: sans-serif;
+    color: #454545;
+}
