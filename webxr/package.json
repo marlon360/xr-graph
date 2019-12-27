@@ -4,14 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html --https",
-    "build": "parcel build index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack-dev-server --config webpack.dev.config.js --open",
+    "build": "webpack --config webpack.prod.config.js"
   },
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "clean-webpack-plugin": "^2.0.1",
+    "file-loader": "^3.0.1",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "terser-webpack-plugin": "^1.2.3",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.2.1",
+    "webpack-merge": "^4.2.1"
+  },
   "dependencies": {
     "aframe": "^1.0.2",
-    "parcel-bundler": "^1.12.4"
+    "aframe-physics-system": "^4.0.1"
   }
 }
