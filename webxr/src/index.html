@@ -20,16 +20,54 @@
       event-set__hover-end="material.color: red;" geometry="primitive: box; height: 0.30; width: 0.30; depth: 0.30"
       material="color: #EF2D5E;" position="1 0.75 -1"></a-entity> -->
 
-      <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 0 -1" graph="segments: 50" ></a-entity>
+      
+      <!-- <a-entity grabbable  data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.1 0.1 0.1" position="0 1 -1.5" plot="function: cos(x) + sin(y);
+                    order: 32;
+                    show_zero_planes: true;
+                    bounds: -10 10 -10 10 -10 10;
+                    color: #04F">
+    </a-entity> -->
       
       <!-- <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder> -->
 
-      <a-entity id="slider" ui-slider="color: red; min: 1; max: 50; value: 10" position="0 0.2 -0.2" rotation="45 0 0"></a-entity>
+
+        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="xMin: -1; xMax: 1; zMin: -1; zMax: 1"></a-entity>
+
+      <a-entity position="-0.6 1.4 -0.2" rotation="0 150 0">
+        <a-entity slider-events id="xslider-up" ui-slider="color: red; min: 0; max: 10; value: 1" rotation="0 0 90"></a-entity>
+        <a-entity slider-text="slider: #xslider-up" position="0 0 0.6" rotation="0 -90 0" text="value: 1;"></a-entity>
+        <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: xMax;"></a-entity>
+      </a-entity>
+      <a-entity position="-0.6 0.8 -0.2" rotation="0 150 0">
+        <a-entity slider-events id="xslider-down" ui-slider="color: red; min: 0; max: -10; value: -1" rotation="180 0 90"></a-entity>
+        <a-entity slider-text="slider: #xslider-down" position="0 0 0.6" rotation="0 -90 0" text="value: -1;"></a-entity>
+        <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: xMin;"></a-entity>
+      </a-entity>
+      <a-entity position="-0.8 1.4 0.1" rotation="0 160 0">
+        <a-entity slider-events id="zslider-up" ui-slider="color: red; min: 0; max: 10; value: 1" rotation="0 0 90"></a-entity>
+        <a-entity slider-text="slider: #zslider-up" position="0 0 0.6" rotation="0 -90 0" text="value: 1;"></a-entity>
+        <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: zMax;"></a-entity>
+      </a-entity>
+      <a-entity position="-0.8 0.8 0.1" rotation="0 160 0">
+        <a-entity slider-events id="zslider-down" ui-slider="color: red; min: 0; max: -10; value: -1" rotation="180 0 90"></a-entity>
+        <a-entity slider-text="slider: #zslider-down" position="0 0 0.6" rotation="0 -90 0" text="value: -1;"></a-entity>
+        <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: zMin;"></a-entity>
+      </a-entity>
+
+      <a-entity position="0 0.6 0">
+      <a-entity position="-0.9 0.6 0.4" rotation="0 90 0" text="value: activate PI;align: center"></a-entity>
+      <a-entity id="pi-toggle" ui-toggle position="-0.9 0.4 0.4" rotation="0 180 90"></a-entity>
+      </a-entity>
+
+      <a-entity position="0.9 0.6 0">
+        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: reset graph transform;align: center"></a-entity>
+        <a-entity id="reset-button" ui-button position="0 0.4 -0.1" rotation="0 -180 -40"></a-entity>
+      </a-entity>
 
       <a-entity light="type: point; color: #f4f4f4; intensity: 0.2; castShadow: true" position="0 3 0"></a-entity>
       <a-entity light="type: ambient; color: #ffffff; intensity: 1;" position="0 3 0"></a-entity>
 
-    <a-log rotation="0 45 0" position="-2 0 -1"></a-log>
+    <!-- <a-log rotation="0 45 0" position="-2 0 -1"></a-log> -->
 
     <!-- <a-box middle="otherhand: #rbox" position="-2 1.5 0"></a-box>
     <a-box id="rbox" position="2 1 0"></a-box> -->
@@ -42,12 +80,84 @@
 </body>
 <script>
   const plot = document.querySelector("#plot");
-  const slider = document.querySelector("#slider");
-  slider.addEventListener('change', (evt) => {
+  const xsliderup = document.querySelector("#xslider-up");
+  const xsliderdown = document.querySelector("#xslider-down");
+  const zsliderup = document.querySelector("#zslider-up");
+  const zsliderdown = document.querySelector("#zslider-down");
+
+  // const button = document.querySelector("#button");
+  // const sliderText = document.querySelector("#text");
+  xsliderup.addEventListener('slider-released', (evt) => {
+    var value = evt.detail.value;
+    value = Math.floor(value);
     plot.setAttribute("graph", {
-      xMax: evt.detail.value
+      xMax: value
     })
   })
+  xsliderdown.addEventListener('slider-released', (evt) => {
+    var value = evt.detail.value;
+    value = Math.floor(value);
+    plot.setAttribute("graph", {
+      xMin: value
+    })
+  })
+  zsliderup.addEventListener('slider-released', (evt) => {
+    var value = evt.detail.value;
+    value = Math.floor(value);
+    plot.setAttribute("graph", {
+      zMax: value
+    })
+  })
+  zsliderdown.addEventListener('slider-released', (evt) => {
+    var value = evt.detail.value;
+    value = Math.floor(value);
+    plot.setAttribute("graph", {
+      zMin: value
+    })
+  })
+
+  const sliders = [xsliderup, xsliderdown, zsliderup, zsliderdown]
+  const activatePI = () => {
+    sliders.forEach((element) => {
+      element.setAttribute('data-slider-pi-multiplier');
+      const sliderEvents = element.components['slider-events']
+      sliderEvents.onGrabEnd();
+    });
+    this.sliderTextEntities = Array.prototype.slice.call(document.querySelectorAll('a-entity[slider-text]'));
+    this.sliderTextEntities.forEach(function (el){
+      el.components['slider-text'].forceUpdate();
+    })
+  }
+  const deactivatePI = () => {
+    sliders.forEach((element) => {
+      element.removeAttribute('data-slider-pi-multiplier');
+      const sliderEvents = element.components['slider-events']
+      sliderEvents.onGrabEnd();
+    });
+    this.sliderTextEntities = Array.prototype.slice.call(document.querySelectorAll('a-entity[slider-text]'));
+    this.sliderTextEntities.forEach(function (el){
+      el.components['slider-text'].forceUpdate();
+    })
+  }
+
+  const piToggle = document.querySelector("#pi-toggle");
+
+  piToggle.addEventListener('change', (evt) => {
+    if (evt.detail.value == 1) {
+      activatePI();
+    } else {
+      deactivatePI();
+    }
+  })
+
+  const resetButton = document.querySelector("#reset-button");
+  resetButton.addEventListener('pressed', (evt) => {
+    plot.setAttribute('scale', '0.5 0.5 0.5');
+    plot.setAttribute('position', '0 1 -0.8');
+    plot.setAttribute('rotation', '0 0 0');
+  })
+  
+
   
 
 </script>
