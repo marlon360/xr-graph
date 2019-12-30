@@ -111,7 +111,7 @@ AFRAME.registerComponent('graph', {
     },
     createWireMaterial: function(segments = 40) {
         var loader = new THREE.TextureLoader();
-        const squareImageUrl = require('../images/square.png');
+        const squareImageUrl = require('../images/square.png').default;
         const wireTexture = loader.load(squareImageUrl);
         wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
         wireTexture.repeat.set(segments, segments);
