@@ -1,5 +1,5 @@
 require('aframe');
-require('aframe-extras');
+require('aframe-aabb-collider-component');
 require('aframe-event-set-component');
 require('aframe-log-component');
 require('aframe-plot-component');
@@ -30,12 +30,15 @@ require('./components/helper');
         this.registerListeners();
     },
     registerListeners: function() {
-        this.el.addEventListener('hit', this.onHit)
+        this.el.addEventListener('hitclosest', this.onHit)
         this.el.addEventListener('triggerdown', this.onGrab)
         this.el.addEventListener('triggerup', this.onGrabEnd)
-        this.el.addEventListener('hitend', this.onHitEnd)
+        //this.el.addEventListener('hitclosestclear', this.onHitEnd)
     },
     onGrab: function() {
+        if (this.hoverEls.length == 0) {
+            this.hoverEls = this.el.components['aabb-collider']['intersectedEls']
+        }
         // only grab if hovering over an element
         if (this.hoverEls.length > 0) {
             // grab first element
@@ -94,6 +97,7 @@ require('./components/helper');
     },
     onHit: function(evt) {
         const hitEl = evt.detail.el
+        console.log(evt)
         if (!hitEl) { return }
         if (Array.isArray(hitEl)) {
             for (let i = 0, sect; i < hitEl.length; i++) {
@@ -104,17 +108,15 @@ require('./components/helper');
             this.hoverStart(hitEl, null)
         }
     },
-    onHitEnd: function(evt) {
-        const clearedEls = evt.detail.el
-        if (clearedEls) {
-            if (Array.isArray(clearedEls)) {
-                clearedEls.forEach(el => this.hoverEnd(el))
-            } else {
-                this.hoverEnd(clearedEls)
-            }
-        }
+    onHitEnd: function(el) {
+        this.hoverEnd(el)
     },
-    hoverStart: function(hitEl, intersection) {
+    hoverStart: function(hitEl, intersection) {    
+        const hitEnd = () => {
+            this.onHitEnd(hitEl);
+            hitEl.removeEventListener('hitend', hitEnd)
+        }    
+        hitEl.addEventListener('hitend', hitEnd)
         const hitElIndex = this.hoverEls.indexOf(hitEl)
         if (hitElIndex === -1) {
             this.hoverEls.push(hitEl)

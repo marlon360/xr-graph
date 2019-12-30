@@ -20,7 +20,7 @@
       event-set__hover-end="material.color: red;" geometry="primitive: box; height: 0.30; width: 0.30; depth: 0.30"
       material="color: #EF2D5E;" position="1 0.75 -1"></a-entity> -->
 
-      <a-entity grabbable="debug: true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 0 -1" graph="segments: 50" ></a-entity>
+      <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 0 -1" graph="segments: 50" ></a-entity>
       
       <!-- <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder> -->
 
@@ -34,8 +34,8 @@
     <!-- <a-box middle="otherhand: #rbox" position="-2 1.5 0"></a-box>
     <a-box id="rbox" position="2 1 0"></a-box> -->
 
-    <a-entity interaction-hands sphere-collider="objects: .grabbable" hand-controls="left" mixin="touch"></a-entity>
-    <a-entity interaction-hands sphere-collider="objects: .grabbable" id="rhand" mixin="touch" hand-controls="right"></a-entity>
+    <a-entity interaction-hands aabb-collider="objects: .grabbable" hand-controls="left" mixin="touch"></a-entity>
+    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="rhand" mixin="touch" hand-controls="right"></a-entity>
 
     <a-entity position="0 1.6 2" camera look-controls wasd-controls></a-entity>
   </a-scene>
