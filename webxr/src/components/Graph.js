@@ -30,7 +30,18 @@ AFRAME.registerComponent('graph', {
         this.root = new THREE.Object3D();
 
         this.root.add(this.makeAxes())
+ 
+        //this.root.add(this.makeGrid(xRange,zRange))
         this.graph = this.createGraph((x,y) => Math.cos(x) + Math.sin(y), {
+            xMin: this.data.xMin,
+            xMax: this.data.xMax,
+            yMin: this.data.yMin,
+            yMax: this.data.yMax,
+            zMin: this.data.zMin,
+            zMax: this.data.zMax,
+            segmentsMultiplier: this.data.segmentsMultiplier
+        });
+        this.grid = this.createGrid({
             xMin: this.data.xMin,
             xMax: this.data.xMax,
             yMin: this.data.yMin,
@@ -41,17 +52,19 @@ AFRAME.registerComponent('graph', {
         });
         
         this.root.add(this.graph);
+        this.root.add(this.grid);
+        this.root.scale.set(0.1,0.1,0.1)
         
         //root.add(this.makeZeroPlanes())
         this.el.setObject3D('mesh', this.root)
     },
     createGraph: function(func, setting) {
         // set default values
-        const xMin = setting && setting.xMin || -10,
-            xMax = setting && setting.xMax || 10,
-            zMin = setting && setting.zMin || -10,
-            zMax = setting && setting.zMax || 10;
-            segmentsMultiplier = setting && setting.segmentsMultiplier || 2;
+        const xMin = setting && setting.xMin,
+            xMax = setting && setting.xMax,
+            zMin = setting && setting.zMin,
+            zMax = setting && setting.zMax;
+            segmentsMultiplier = setting && setting.segmentsMultiplier;
         
         // calculate ranges
         const xRange = xMax - xMin;
@@ -71,7 +84,7 @@ AFRAME.registerComponent('graph', {
         };
 
         this.graphGeometry = new THREE.ParametricGeometry(meshFunction, segments, segments);
-        this.graphGeometry.scale(0.1, 0.1, 0.1);
+        this.graphGeometry.scale(1, 1, 1);
 
         // set colors based on z value
         this.graphGeometry.computeBoundingBox();
@@ -104,7 +117,7 @@ AFRAME.registerComponent('graph', {
         }
 
         this.wireMaterial = this.createWireMaterial(segments);
-        this.wireMaterial.map.repeat.set(segments, segments);
+        //this.wireMaterial.map.repeat.set(segments, segments);
 
         const graphMesh = new THREE.Mesh(this.graphGeometry, this.wireMaterial);
         return graphMesh;
@@ -112,53 +125,75 @@ AFRAME.registerComponent('graph', {
     createWireMaterial: function(segments = 40) {
         var loader = new THREE.TextureLoader();
         const squareImageUrl = require('../images/square.png').default;
-        const wireTexture = loader.load(squareImageUrl);
-        wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
-        wireTexture.repeat.set(segments, segments);
-        return new THREE.MeshBasicMaterial({ map: wireTexture, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
+        // const wireTexture = loader.load(squareImageUrl);
+        // wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
+        // wireTexture.repeat.set(segments, segments);
+        return new THREE.MeshBasicMaterial({vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
     },
     makeAxes: function () {
         var axes = new THREE.AxesHelper;
         return axes;
     },
-    makeZeroPlanes: function (setting) {
+    makeGrid: function () {
+        // calculate ranges
+        const xRange = this.data.xMax - this.data.xMin;
+        const zRange = this.data.zMax - this.data.zMin;
 
-        const xMin = setting && setting.xMin || -10,
-            xMax = setting && setting.xMax || 10,
-            zMin = setting && setting.yMin || -10,
-            zMax = setting && setting.yMin || 10,
-            yMin = setting && setting.yMin || -10,
-            yMax = setting && setting.yMin || 10;
+        const segments = Math.max(xRange, zRange);
 
-        var zeroPlaneMaterial = new THREE.MeshLambertMaterial();
-        zeroPlaneMaterial.side = THREE.DoubleSide;
+        const zeroPlaneMaterial = new THREE.MeshBasicMaterial({side: THREE.DoubleSide });
+        const alphaMapURL = require('../images/square_inv.png').default;
+        var loader = new THREE.TextureLoader();
+        const alphaTexture = loader.load(alphaMapURL);
+        alphaTexture.wrapS = alphaTexture.wrapT = THREE.RepeatWrapping;
+        alphaTexture.repeat.set(segments, segments);
+        zeroPlaneMaterial.alphaMap = alphaTexture;
         zeroPlaneMaterial.transparent = true;
-        zeroPlaneMaterial.opacity = 1 / 8;
-        zeroPlaneMaterial.color = new THREE.Color(0x2244BB);
+        zeroPlaneMaterial.opacity = 0.5;
+        zeroPlaneMaterial.color.setHex(0x000000);
+
+        var zeroZGeometry = new THREE.PlaneGeometry(xRange * 2 + 2, zRange * 2 + 2);
+        zeroZGeometry.rotateX(Math.PI / 2)
+
+        return new THREE.Mesh(zeroZGeometry, zeroPlaneMaterial);
+    },
+    createGrid: function(setting) {
+        // set default values
+        const xMin = setting && setting.xMin,
+            xMax = setting && setting.xMax,
+            zMin = setting && setting.zMin,
+            zMax = setting && setting.zMax;
+            segmentsMultiplier = setting && setting.segmentsMultiplier;
         
-        var zeroPlanes = new THREE.Object3D();
-        
-        var xRange = xMax - xMin;
-        var yRange = yMax - yMin;
-        var zRange = zMax - zMin;
-        
-        var zeroZGeometry = new THREE.PlaneGeometry(xRange, yRange);
-        var zeroZ = new THREE.Mesh(zeroZGeometry, zeroPlaneMaterial);
-        zeroZ.position.set(xMin + xRange / 2, yMin + yRange / 2, 0.0);
-        zeroPlanes.add(zeroZ);
-        
-        var zeroYGeometry = new THREE.PlaneGeometry(xRange, zRange);
-        var zeroY = new THREE.Mesh(zeroYGeometry, zeroPlaneMaterial);
-        zeroY.position.set(xMin + xRange / 2, 0.0, zMin + zRange / 2);
-        zeroY.rotation.set(Math.PI / 2, 0.0, 0.0);
-        zeroPlanes.add(zeroY);
-        
-        var zeroXGeometry = new THREE.PlaneGeometry(zRange, yRange);
-        var zeroX = new THREE.Mesh(zeroXGeometry, zeroPlaneMaterial);
-        zeroX.position.set(0.0, yMin + yRange / 2, zMin + zRange / 2);
-        zeroX.rotation.set(0.0, Math.PI / 2, 0.0);
-        zeroPlanes.add(zeroX);
-        
-        return zeroPlanes;
-    }
+        // calculate ranges
+        const xRange = xMax - xMin;
+        const zRange = zMax - zMin;
+
+        const segments = Math.max(xRange, zRange);
+
+        // x and y from 0 to 1
+        const meshFunction = (x, z, vec3) => {
+            // map x,y to range
+            x = xRange * x + xMin;
+            z = zRange * z + zMin;
+            vec3.set(x, 0, z);
+        };
+
+        this.gridGeometry = new THREE.ParametricGeometry(meshFunction, segments, segments);
+        this.gridGeometry.scale(1, 1, 1);
+
+        const zeroPlaneMaterial = new THREE.MeshBasicMaterial({side: THREE.DoubleSide });
+        const alphaMapURL = require('../images/square_inv.png').default;
+        var loader = new THREE.TextureLoader();
+        const alphaTexture = loader.load(alphaMapURL);
+        alphaTexture.wrapS = alphaTexture.wrapT = THREE.RepeatWrapping;
+        alphaTexture.repeat.set(xRange, zRange);
+        zeroPlaneMaterial.alphaMap = alphaTexture;
+        zeroPlaneMaterial.transparent = true;
+        zeroPlaneMaterial.opacity = 0.5;
+        zeroPlaneMaterial.color.setHex(0x000000);
+
+        const graphMesh = new THREE.Mesh(this.gridGeometry, zeroPlaneMaterial);
+        return graphMesh;
+    },
   })
