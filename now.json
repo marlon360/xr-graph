@@ -3,10 +3,10 @@
     "builds": [
       {
         "src": "webxr/package.json",
-        "use": "@now/static-build",
-        "config": {
-            "distDir": "webxr/dist"
-          }
+        "use": "@now/static-build"
       }
+    ],
+    "routes": [
+      { "src": "/(.*)", "dest": "webxr/$1" }
     ]
   }
