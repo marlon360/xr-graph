@@ -1,0 +1,28 @@
+body {
+    width: 480px;
+}
+
+.tab {
+    display: flex;
+}
+
+.tab__item {
+    display: block;
+    padding: 0.5em;
+}
+
+.tab__title,
+.tab__url {
+    width: 50%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tab__focus {
+    color: #0000ff;
+}
+
+.tab__close {
+    color: #ff0000;
+}

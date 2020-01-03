@@ -1,0 +1,35 @@
+{
+  "name": "webxr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.dev.config.js --open",
+    "build": "webpack --config webpack.prod.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "file-loader": "^5.0.2",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "terser-webpack-plugin": "^2.3.1",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "aframe": "^1.0.3",
+    "aframe-aabb-collider-component": "^3.2.0",
+    "aframe-event-set-component": "^5.0.0",
+    "aframe-extras": "^6.0.1",
+    "aframe-log-component": "^1.0.7",
+    "aframe-physics-extras": "^0.1.3",
+    "aframe-physics-system": "^4.0.1",
+    "aframe-plot-component": "^1.1.2",
+    "aframe-ui-widgets": "^1.0.2",
+    "super-hands": "^3.0.0"
+  }
+}
