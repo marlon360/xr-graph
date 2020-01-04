@@ -1,5 +1,4 @@
 import SpriteText from 'three-spritetext';
-import { Vector3 } from 'three';
 
 AFRAME.registerComponent('graph', {
     schema: {
@@ -35,7 +34,7 @@ AFRAME.registerComponent('graph', {
         this.root.add(this.makeAxes())
  
         //this.root.add(this.makeGrid(xRange,zRange))
-        this.graph = this.createGraph((x,y) => x, {
+        this.graph = this.createGraph((x,y) => Math.cos(x) + Math.sin(y), {
             xMin: this.data.xMin,
             xMax: this.data.xMax,
             yMin: this.data.yMin,
@@ -44,6 +43,7 @@ AFRAME.registerComponent('graph', {
             zMax: this.data.zMax,
             segmentsMultiplier: this.data.segmentsMultiplier
         });
+        //this.graph = this.createGraphObject((x,y) => x, 32, this.data, "#AAA", 0.1, 0.1)
         this.grid = this.createGrid({
             xMin: this.data.xMin,
             xMax: this.data.xMax,
@@ -91,41 +91,44 @@ AFRAME.registerComponent('graph', {
                 vec3.set(x, y, z);
         };
 
-        this.graphGeometry = new THREE.ParametricGeometry(meshFunction, segments, segments);
+        this.graphGeometry = new THREE.ParametricBufferGeometry(meshFunction, segments, segments);
         this.graphGeometry.scale(1, 1, 1);
 
-        // set colors based on z value
-        this.graphGeometry.computeBoundingBox();
-        const yMin = this.graphGeometry.boundingBox.min.y;
-        const yMax = this.graphGeometry.boundingBox.max.y;
-        const yRange = yMax - yMin;
+        // get min max y
+        let yMin = null;
+        let yMax = null;
+        for(let i = 1; i < this.graphGeometry.attributes.position.array.length; i += 3) {
+            const yVal = this.graphGeometry.attributes.position.array[i];
+            if(yMin == null || yVal < yMin) {
+                yMin = yVal
+            }
+            if(yMax == null || yVal > yMax) {
+                yMax = yVal
+            }
+        }
 
-        let point;
+        const yRange = yMax - yMin;
+        
+        var colArr = []
         let color;
-        // first, assign colors to vertices
-        for (var i = 0; i < this.graphGeometry.vertices.length; i++) {
-            point = this.graphGeometry.vertices[i];
+        for(let i = 1; i < this.graphGeometry.attributes.position.array.length; i += 3) {
+            const yVal = this.graphGeometry.attributes.position.array[i];            
             color = new THREE.Color(0xffffff);
             // only change color if not infinte
             if (isFinite(yRange)) {
-                color.setHSL(0.7 * (yMax - point.y) / yRange, 1, 0.5);
-            }
-            this.graphGeometry.colors[i] = color;
-        }
-        // faces are indexed using characters
-        const faceIndices = ['a', 'b', 'c', 'd'];
-        // copy the colors as necessary to the face's vertexColors array.
-        for (let i = 0; i < this.graphGeometry.faces.length; i++) {
-            const face = this.graphGeometry.faces[i];
-            const numberOfSides = (face instanceof THREE.Face3) ? 3 : 4;
-            for (let j = 0; j < numberOfSides; j++) {
-                const vertexIndex = face[faceIndices[j]];
-                face.vertexColors[j] = this.graphGeometry.colors[vertexIndex];
-            }
-        }
+                color.setHSL(0.7 * (yMax - yVal) / yRange, 1, 0.5);
+            }            
+            colArr = colArr.concat([color.r * 255, color.g * 255, color.b * 255]);
+        }        
+        var colors = new Uint8Array(colArr);
+       
+       // Don't forget to normalize the array! (third param = true)
+       this.graphGeometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3, true) );
+       
 
         this.wireMaterial = this.createWireMaterial(segments);
-        //this.wireMaterial.map.repeat.set(segments, segments);
+        console.log(this.wireMaterial);
+        
 
         const graphMesh = new THREE.Mesh(this.graphGeometry, this.wireMaterial);
         return graphMesh;
@@ -133,10 +136,10 @@ AFRAME.registerComponent('graph', {
     createWireMaterial: function(segments = 40) {
         var loader = new THREE.TextureLoader();
         const squareImageUrl = require('../images/square.png').default;
-        // const wireTexture = loader.load(squareImageUrl);
-        // wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
-        // wireTexture.repeat.set(segments, segments);
-        return new THREE.MeshBasicMaterial({vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
+        const wireTexture = loader.load(squareImageUrl);
+        wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
+        wireTexture.repeat.set(segments, segments);
+        return new THREE.MeshBasicMaterial({ map: wireTexture, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
     },
     makeAxes: function () {
         var axes = new THREE.AxesHelper;
@@ -225,5 +228,5 @@ AFRAME.registerComponent('graph', {
         grid.add(graphMesh);
 
         return grid;
-    },
+    }
   })

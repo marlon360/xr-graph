@@ -94,6 +94,14 @@
       xMax: value
     })
   })
+
+  xsliderup.addEventListener('change', (evt) => {
+    var value = evt.detail.value;
+    plot.setAttribute("graph", {
+      xMax: value
+    })
+  })
+
   xsliderdown.addEventListener('slider-released', (evt) => {
     var value = evt.detail.value;
     value = Math.floor(value);
