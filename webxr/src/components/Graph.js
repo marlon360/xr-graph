@@ -1,3 +1,6 @@
+import SpriteText from 'three-spritetext';
+import { Vector3 } from 'three';
+
 AFRAME.registerComponent('graph', {
     schema: {
         xMin: {
@@ -24,15 +27,15 @@ AFRAME.registerComponent('graph', {
     },
     init: function() {
         this.graph = null;
-        this.root = new THREE.Object3D();
+        this.root = new THREE.Group();
     },
     update: function() {
-        this.root = new THREE.Object3D();
+        this.root = new THREE.Group();
 
         this.root.add(this.makeAxes())
  
         //this.root.add(this.makeGrid(xRange,zRange))
-        this.graph = this.createGraph((x,y) => Math.cos(x) + Math.sin(y), {
+        this.graph = this.createGraph((x,y) => x, {
             xMin: this.data.xMin,
             xMax: this.data.xMax,
             yMin: this.data.yMin,
@@ -57,13 +60,18 @@ AFRAME.registerComponent('graph', {
         
         //root.add(this.makeZeroPlanes())
         this.el.setObject3D('mesh', this.root)
+
+        this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);
+    },
+    tick: function() {
+        this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);
     },
     createGraph: function(func, setting) {
         // set default values
         const xMin = setting && setting.xMin,
             xMax = setting && setting.xMax,
             zMin = setting && setting.zMin,
-            zMax = setting && setting.zMax;
+            zMax = setting && setting.zMax,
             segmentsMultiplier = setting && setting.segmentsMultiplier;
         
         // calculate ranges
@@ -162,7 +170,7 @@ AFRAME.registerComponent('graph', {
         const xMin = setting && setting.xMin,
             xMax = setting && setting.xMax,
             zMin = setting && setting.zMin,
-            zMax = setting && setting.zMax;
+            zMax = setting && setting.zMax,
             segmentsMultiplier = setting && setting.segmentsMultiplier;
         
         // calculate ranges
@@ -194,6 +202,28 @@ AFRAME.registerComponent('graph', {
         zeroPlaneMaterial.color.setHex(0x000000);
 
         const graphMesh = new THREE.Mesh(this.gridGeometry, zeroPlaneMaterial);
-        return graphMesh;
+
+        const grid = new THREE.Group();
+
+        const xMinText = new SpriteText(xMin.toString(), 0.5, "red");
+        xMinText.position.set(xMin + 0.2, 0, zMin);
+        xMinText.geometry.dispose();
+        xMinText.geometry = new THREE.PlaneBufferGeometry();
+        var xMaxText = new SpriteText((xMin + xRange).toString(), 0.5, "red");
+        xMaxText.position.set(xMin + xRange, 0, zMin)
+
+        grid.add(xMinText);
+        grid.add(xMaxText);
+
+        const zMinText = new SpriteText(zMin.toString(), 0.5, "blue");
+        zMinText.position.set(xMin, 0, zMin + 0.2);
+        var zMaxText = new SpriteText((zMin + zRange).toString(), 0.5, "blue");
+        zMaxText.position.set(xMin, 0 ,zMin + zRange)
+        grid.add(zMinText);
+        grid.add(zMaxText);
+
+        grid.add(graphMesh);
+
+        return grid;
     },
   })
