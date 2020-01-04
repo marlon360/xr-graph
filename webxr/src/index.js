@@ -1,10 +1,10 @@
 require('aframe');
-require('aframe-aabb-collider-component');
 require('aframe-event-set-component');
 require('aframe-log-component');
 require('aframe-plot-component');
 require('aframe-ui-widgets');
 
+require('./components/aframe-aabb-collider');
 require('./components/aframe-parent-constraint');
 require('./components/helper');
 require('./components/Graph');
