@@ -1,4 +1,5 @@
 import SpriteText from 'three-spritetext';
+import { parse } from './MathParser';
 
 AFRAME.registerComponent('graph', {
     schema: {
@@ -34,33 +35,36 @@ AFRAME.registerComponent('graph', {
         },
         showWireframe: {
             default: false
+        },
+        function: {
+            default: "f(u, v) = [1.5 * u, 0.1 * u^2 * cos(v), 0.1 * u^2 * sin(v)]"
         }
     },
     init: function() {
-        this.graph = null;
-        this.root = new THREE.Group();
+
     },
     update: function() {
+
+        // function mapping:
+        // 1 input 1 output = curve
+        // 1 input 2 output = curve
+        // 1 input 3 output = curve
+        // 2 input 1 output = graph (x,y,f(x,y))
+        // 2 input 3 output = graph
+
+        this.function = parse(this.data.function); 
+                
+        if (this.function.inputSize == 1) {
+            this.graph = this.createCurve(this.function.func, this.data);
+        } else if (this.function.inputSize == 2) {
+            if (this.function.outputSize == 1) {
+                this.graph = this.createGraph((x,y) => [x, y, this.function.func(x,y)], this.data);
+            } else {
+                this.graph = this.createGraph(this.function.func, this.data);
+            }
+        }
+
         this.root = new THREE.Group();
- 
-        this.graph = this.createGraph((x,y) => Math.cos(x) + Math.sin(y), {
-            xMin: this.data.xMin,
-            xMax: this.data.xMax,
-            yMin: this.data.yMin,
-            yMax: this.data.yMax,
-            zMin: this.data.zMin,
-            zMax: this.data.zMax,
-            segmentsMultiplier: this.data.segmentsMultiplier
-        });
-        // this.graph = this.createCurve((x) => [Math.cos(x), Math.sin(x), x], {
-        //     xMin: this.data.xMin,
-        //     xMax: this.data.xMax,
-        //     yMin: this.data.yMin,
-        //     yMax: this.data.yMax,
-        //     zMin: this.data.zMin,
-        //     zMax: this.data.zMax,
-        //     segmentsMultiplier: this.data.segmentsMultiplier
-        // });
         this.root.add(this.graph);
 
         if (this.data.showGrid) {
@@ -80,9 +84,7 @@ AFRAME.registerComponent('graph', {
         //root.add(this.makeZeroPlanes())
         this.el.setObject3D('mesh', this.root)
 
-        this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);
-        console.log(this);
-        
+        this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);        
     },
     tick: function() {
         this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);
@@ -150,9 +152,9 @@ AFRAME.registerComponent('graph', {
             x = xRange * x + xMin;
             z = zRange * z + zMin;
             // get z value from function
-            const y = func(x, z);
-            if (!isNaN(y))
-                vec3.set(x, y, z);
+            const result = func(x, z);
+            if (!isNaN(result[0]))
+                vec3.set(result[0], result[2] || 0, result[1] || 0);
         };
 
         this.graphGeometry = new THREE.ParametricBufferGeometry(meshFunction, segments, segments);
