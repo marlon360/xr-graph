@@ -1,0 +1,58 @@
+<html>
+<head>
+
+    <style>
+        .buttons {
+            position: absolute;
+            bottom: 10px;
+            padding: 10px;
+        }
+        button {
+            border: 0;
+            background: rgba(255,255,255,0.7);
+            padding: 0.6em 1em;
+            font-size: 1em;
+        }
+    </style>
+</head>
+
+<!-- start the body of your page -->
+<body style='margin : 0px; overflow: hidden;'>
+	<!-- Define your 3d scene and enabled ar.js -->
+	<a-scene embedded vr-mode-ui="enabled: false" arjs='trackingMethod: best;debugUIEnabled: false;'>
+		
+		<a-marker id="marker" type="pattern">
+            <a-entity id="plot" scale="0.5 0.5 0.5" position="0 0.5 0" graph="xMin: -7; xMax: 7; zMin: -3; zMax: 6.3; segmentsMultiplier: 2; showGrid: false; showGridLabels: false; function: (x,y) = cos(x) + sin(y)"></a-entity >
+        </a-marker>
+
+		<a-entity camera></a-entity>
+    </a-scene>
+    <div class="buttons">
+        <button id="wireframe-button">Toggle Wireframe</button>
+        <button id="grid-button">Toggle Grid</button>
+    </div>
+</body>
+<script>
+
+    const plot = document.querySelector("#plot");
+
+    let showWireframe = false;
+    let showGrid = false;
+
+    wireframeButton = document.querySelector("#wireframe-button");
+    wireframeButton.addEventListener('click', (evt) => {
+        showWireframe = !showWireframe
+        plot.setAttribute("graph", {
+            showWireframe: showWireframe
+        })
+    })
+    wireframeButton = document.querySelector("#grid-button");
+    wireframeButton.addEventListener('click', (evt) => {
+        showGrid = !showGrid;
+        plot.setAttribute("graph", {
+            showGrid: showGrid
+        })
+    })
+
+</script>
+</html>

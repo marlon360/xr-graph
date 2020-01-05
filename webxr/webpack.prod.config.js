@@ -7,10 +7,17 @@ const TerserPlugin = require("terser-webpack-plugin");
 const common = require("./webpack.common.config");
 
 module.exports = merge(common, {
+  node: {
+    fs: 'empty'
+  },
   // production mode makes it uglyfied/minified
   mode: "production",
   // no weird "eval" stuff, shows code relatively clear in dist/main.js
   devtool: "none",
+  entry: {
+    vr: "./src/index.js",
+    ar: "./src/ar-script.js"
+  },
   output: {
     // the filename is the name of the bundled file
     filename: "[name].[contentHash].bundle.js",
@@ -24,18 +31,21 @@ module.exports = merge(common, {
     }
   },
   optimization: {
-    minimizer: [new TerserPlugin(), new HtmlWebpackPlugin({
-      template: "./src/index.html",
-      // Injects file in the head of the html
-      inject: 'head',
-      // Settings for the html file itself
-      minify: {
-        removeAttributeQuotes: true,
-        collapseWhitespace: true,
-        removeComments: true
-      }
-    })]
+    minimizer: [new TerserPlugin()]
   },
   // Deletes the dist folder, so the new .js files wont stack and pollute the folder
-  plugins: [new CleanWebpackPlugin()]
+  plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({
+    chunks: ['vr'],
+    template: "./src/index.html",
+    filename: "index.html",
+    // Injects file in the head of the html
+    inject: 'head'
+  }),
+  new HtmlWebpackPlugin({
+    chunks: ['ar'],
+    template: "./src/ar.html",
+    filename: "ar.html",
+    // Injects file in the head of the html
+    inject: 'head'
+  })]
 });

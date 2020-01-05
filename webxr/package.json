@@ -30,6 +30,7 @@
     "aframe-physics-system": "^4.0.1",
     "aframe-plot-component": "^1.1.2",
     "aframe-ui-widgets": "^1.0.2",
+    "ar.js": "^2.1.4",
     "expr-eval": "^2.0.2",
     "super-hands": "^3.0.0",
     "three": "^0.112.1",
