@@ -31,7 +31,7 @@
       <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder>
 
 
-        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="xMin: 0; xMax: 6; zMin: 0; zMax: 6; segmentsMultiplier: 2"></a-entity >
+        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="xMin: 0; xMax: 6; zMin: 0; zMax: 6; segmentsMultiplier: 2; showGrid: false; showGridLabels: false"></a-entity >
 
       <a-entity position="-0.6 1.4 -0.2" rotation="0 150 0">
         <a-entity slider-events id="xslider-up" ui-slider="color: red; min: 0; max: 10; value: 6" rotation="0 0 90"></a-entity>
@@ -62,6 +62,19 @@
       <a-entity position="0.9 0.6 0">
         <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: reset graph transform;align: center"></a-entity>
         <a-entity id="reset-button" ui-button position="0 0.4 -0.1" rotation="0 -180 -40"></a-entity>
+      </a-entity>
+
+      <a-entity position="0.9 0.6 0.4">
+        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: toggle grid;align: center"></a-entity>
+        <a-entity id="grid-toggle" ui-toggle position="0 0.4 -0.1" rotation="70 -90 0"></a-entity>
+      </a-entity>
+      <a-entity position="0.9 1 0">
+        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: toggle wireframe;align: center"></a-entity>
+        <a-entity id="wireframe-toggle" ui-toggle position="0 0.4 -0.1" rotation="70 -90 0"></a-entity>
+      </a-entity>
+      <a-entity position="0.9 1 0.4">
+        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: toggle labels;align: center"></a-entity>
+        <a-entity id="label-toggle" ui-toggle position="0 0.4 -0.1" rotation="70 -90 0"></a-entity>
       </a-entity>
 
       <a-entity light="type: point; color: #f4f4f4; intensity: 0.2; castShadow: true" position="0 3 0"></a-entity>
@@ -156,6 +169,29 @@
     } else {
       deactivatePI();
     }
+  })
+
+  const gridToggle = document.querySelector("#grid-toggle");
+
+  gridToggle.addEventListener('change', (evt) => {
+    plot.setAttribute("graph", {
+      showGrid: evt.detail.value == 1
+    })
+  })
+  const wireframeToggle = document.querySelector("#wireframe-toggle");
+
+  wireframeToggle.addEventListener('change', (evt) => {
+    plot.setAttribute("graph", {
+      showWireframe: evt.detail.value == 1
+    })
+  })
+
+  const labelToggle = document.querySelector("#label-toggle");
+
+  labelToggle.addEventListener('change', (evt) => {
+    plot.setAttribute("graph", {
+      showGridLabels: evt.detail.value == 1
+    })
   })
 
   const resetButton = document.querySelector("#reset-button");
