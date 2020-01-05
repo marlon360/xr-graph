@@ -43,7 +43,6 @@ AFRAME.registerComponent('graph', {
     update: function() {
         this.root = new THREE.Group();
  
-        //this.root.add(this.makeGrid(xRange,zRange))
         this.graph = this.createGraph((x,y) => Math.cos(x) + Math.sin(y), {
             xMin: this.data.xMin,
             xMax: this.data.xMax,
@@ -53,6 +52,15 @@ AFRAME.registerComponent('graph', {
             zMax: this.data.zMax,
             segmentsMultiplier: this.data.segmentsMultiplier
         });
+        // this.graph = this.createCurve((x) => [Math.cos(x), Math.sin(x), x], {
+        //     xMin: this.data.xMin,
+        //     xMax: this.data.xMax,
+        //     yMin: this.data.yMin,
+        //     yMax: this.data.yMax,
+        //     zMin: this.data.zMin,
+        //     zMax: this.data.zMax,
+        //     segmentsMultiplier: this.data.segmentsMultiplier
+        // });
         this.root.add(this.graph);
 
         if (this.data.showGrid) {
@@ -73,6 +81,8 @@ AFRAME.registerComponent('graph', {
         this.el.setObject3D('mesh', this.root)
 
         this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);
+        console.log(this);
+        
     },
     tick: function() {
         this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);
@@ -170,6 +180,56 @@ AFRAME.registerComponent('graph', {
 
         const graphMesh = new THREE.Mesh(this.graphGeometry, this.wireMaterial);
         return graphMesh;
+    },
+    createCurve: function(func, setting) {
+         // set default values
+         const segments = setting && setting.segments || 100,
+         radiusSegments = setting && setting.radiusSegments || 6,
+         tubeRadius = setting && setting.tubeRadius ||0.1,
+         tMin = setting && setting.tMin || 0,
+         tMax = setting && setting.tMax || 10;
+
+        const tRange = tMax - tMin;
+
+        function CustomPath (scale) {
+            THREE.Curve.call(this);
+            this.scale = scale;
+        }
+
+        CustomPath.prototype = Object.create(THREE.Curve.prototype);
+        CustomPath.prototype.constructor = CustomPath;
+        CustomPath.prototype.getPoint = function(t) {
+            t = t * tRange + tMin;
+
+            if (Array.isArray(func(t))) {
+                return new THREE.Vector3(func(t)[0],func(t)[2] || 0,func(t)[1] || 0);
+            } else {
+                // draw in xz plane a normal graph
+                return new THREE.Vector3(t, func(t), 0);
+            }
+        }
+
+        const path = new CustomPath(1);
+
+        const tubeGeometry = new THREE.TubeBufferGeometry(path, segments, tubeRadius, radiusSegments, false);
+        this.computeMinMaxRange(tubeGeometry);
+
+        var colArr = []
+        for(let i = 1; i < tubeGeometry.attributes.position.array.length; i += 3) {
+            const color = new THREE.Color(0xffffff);
+            color.setHSL((1 * i / tubeGeometry.attributes.position.array.length) % 1 * 0.7, 1, 0.5);            
+            colArr = colArr.concat([color.r * 255, color.g * 255, color.b * 255]);
+        }        
+        var colors = new Uint8Array(colArr);
+       
+       // Don't forget to normalize the array! (third param = true)
+       tubeGeometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3, true) );
+
+        const wireMaterial = this.createWireMaterial(segments);
+        if (wireMaterial.map) {
+            wireMaterial.map.repeat.set(segments, radiusSegments);
+        }
+        return new THREE.Mesh(tubeGeometry, wireMaterial);
     },
     createWireMaterial: function(segments = 40) {
         var loader = new THREE.TextureLoader();
