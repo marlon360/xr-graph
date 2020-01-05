@@ -22,7 +22,7 @@
 	<a-scene embedded vr-mode-ui="enabled: false" arjs='trackingMethod: best;debugUIEnabled: false;'>
 		
 		<a-marker id="marker" type="pattern">
-            <a-entity id="plot" scale="0.5 0.5 0.5" position="0 0.5 0" graph="xMin: -7; xMax: 7; zMin: -3; zMax: 6.3; segmentsMultiplier: 2; showGrid: false; showGridLabels: false; function: (x,y) = cos(x) + sin(y)"></a-entity >
+            <a-entity id="plot" scale="1 1 1" position="0 0.5 0" graph="xMin: -7; xMax: 7; zMin: 0; zMax: 6.3; segmentsMultiplier: 2; showGrid: false; showGridLabels: false; function: (u,v) = [v * cos(u), v * sin(u), u]"></a-entity >
         </a-marker>
 
 		<a-entity camera></a-entity>
