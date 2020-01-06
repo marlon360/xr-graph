@@ -33,13 +33,21 @@ xParam = xParam.replace(/b/g, bFactor);
 
 yParam = yParam.replace(/a/g, aFactor);
 yParam = yParam.replace(/b/g, bFactor);
+if (zParam != null) {
+    zParam = zParam.replace(/a/g, aFactor);
+    zParam = zParam.replace(/b/g, bFactor);
+}
 
-zParam = zParam.replace(/a/g, aFactor);
-zParam = zParam.replace(/b/g, bFactor);
+let functionParams = []
+functionParams.push(xParam);
+functionParams.push(yParam);
+if (zParam) {
+    functionParams.push(zParam);
+}
 
 let link = "https://vr-graph.now.sh?func=";
 if (tMin == null) {
-    link += encodeURIComponent("[" + [xParam, yParam, zParam].join(', ') + "]")
+    link += "[" + functionParams.join(', ') + "]"
     if (uMin != null) {
         link += "&xmin=" + uMin
     }
@@ -53,7 +61,7 @@ if (tMin == null) {
         link += "&zmax=" + vMax
     }
 } else {
-    link += "[" + [xParam, yParam, zParam].join(', ') + "]"
+    link += "[" + functionParams.join(', ') + "]"
     if (tMin != null) {
         link += "&tmin=" + tMin
     }
