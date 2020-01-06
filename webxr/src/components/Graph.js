@@ -150,10 +150,7 @@ AFRAME.registerComponent('graph', {
         const xRange = xMax - xMin;
         const zRange = zMax - zMin;
 
-        let segments = Math.max(xRange, zRange);
-        if (segments < 1) {
-            segments *= 10
-        }
+        let segments = Math.max(xRange, zRange, 20);
         segments = Math.floor(segments) * segmentsMultiplier;
 
         // x and y from 0 to 1
