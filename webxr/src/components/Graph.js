@@ -150,7 +150,11 @@ AFRAME.registerComponent('graph', {
         const xRange = xMax - xMin;
         const zRange = zMax - zMin;
 
-        const segments = Math.max(xRange, zRange) * segmentsMultiplier;
+        let segments = Math.max(xRange, zRange);
+        if (segments < 1) {
+            segments *= 10
+        }
+        segments = Math.floor(segments) * segmentsMultiplier;
 
         // x and y from 0 to 1
         const meshFunction = (x, z, vec3) => {
@@ -240,21 +244,25 @@ AFRAME.registerComponent('graph', {
         return new THREE.Mesh(tubeGeometry, wireMaterial);
     },
     createWireMaterial: function(segments = 40) {
-        var loader = new THREE.TextureLoader();
-        const squareImageUrl = require('../images/square.png').default;
-        const wireTexture = loader.load(squareImageUrl);
-        wireTexture.wrapS = wireTexture.wrapT = THREE.RepeatWrapping;
-        wireTexture.repeat.set(segments, segments);
-        return new THREE.MeshBasicMaterial({ map: this.data.showWireframe ? wireTexture : null, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
+        if (this.wireTexture == null) {
+            var loader = new THREE.TextureLoader();
+            const squareImageUrl = require('../images/square.png').default;
+            this.wireTexture = loader.load(squareImageUrl);
+        }
+        this.wireTexture.wrapS = this.wireTexture.wrapT = THREE.RepeatWrapping;
+        this.wireTexture.repeat.set(segments, segments);
+        return new THREE.MeshBasicMaterial({ map: this.data.showWireframe ? this.wireTexture : null, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
     },
     createTransparentWireMaterial: function(width, height){
         const transparentWireMaterial = new THREE.MeshBasicMaterial();
-        const alphaMapURL = require('../images/square_inv.png').default;
-        var loader = new THREE.TextureLoader();
-        const alphaTexture = loader.load(alphaMapURL);
-        alphaTexture.wrapS = alphaTexture.wrapT = THREE.RepeatWrapping;
-        alphaTexture.repeat.set(width, height);
-        transparentWireMaterial.alphaMap = alphaTexture;
+        if (this.alphaTexture == null) {
+            const alphaMapURL = require('../images/square_inv.png').default;
+            var loader = new THREE.TextureLoader();
+            this.alphaTexture = loader.load(alphaMapURL);
+        }
+        this.alphaTexture.wrapS = this.alphaTexture.wrapT = THREE.RepeatWrapping;
+        this.alphaTexture.repeat.set(width, height);
+        transparentWireMaterial.alphaMap = this.alphaTexture;
         transparentWireMaterial.transparent = true;
         transparentWireMaterial.opacity = 0.5;
         transparentWireMaterial.color.setHex(0x000000);
