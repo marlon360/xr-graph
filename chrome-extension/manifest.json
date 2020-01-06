@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Chrome Extension Starter Kit",
+  "name": "XR Graph - Browser Integration",
   "description": "",
   "version": "1.0.0",
   "icons": {
@@ -15,7 +15,7 @@
       "38": "icon/icon-38.png"
     },
     "default_popup": "html/popup.html",
-    "default_title": "Chrome Extension Starter Kit"
+    "default_title": "XR Graph - Browser Integration"
   },
   "options_ui": {
     "page": "html/options.html",
