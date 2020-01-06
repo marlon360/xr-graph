@@ -21,25 +21,28 @@
     "page": "html/options.html",
     "chrome_style": true
   },
-  "background": {
-    "scripts": [
-      "js/config.js",
-      "js/fn.js",
-      "js/background.js"
-    ]
-  },
   "content_scripts": [
     {
       "matches": [
         "https://www.wolframalpha.com/*"
       ],
       "js": [
-        "js/config.js",
-        "js/fn.js",
-        "js/content.js"
+        "js/wolframalpha.js"
       ],
       "css": [
-        "css/content.css"
+        "css/wolframalpha.css"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "http://weitz.de/*"
+      ],
+      "js": [
+        "js/weitz.js"
+      ],
+      "css": [
+        "css/weitz.css"
       ],
       "run_at": "document_end"
     }
