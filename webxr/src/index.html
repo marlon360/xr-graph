@@ -112,10 +112,48 @@
   }
 
   const funcParameter = findGetParameter("func");
+  const xMin = findGetParameter("xmin");
+  const xMax = findGetParameter("xmax");
+  const zMin = findGetParameter("zmin");
+  const zMax = findGetParameter("zmax");
+  const tMin = findGetParameter("tmin");
+  const tMax = findGetParameter("tmax");
+
+  let setting = {}
   if (funcParameter != null) {
       plot.setAttribute('graph', {
         function: decodeURIComponent(funcParameter)
       });
+  }
+  if (tMin != null) {
+    plot.setAttribute('graph', {
+      tMin: decodeURIComponent(tMin)
+    });
+  }
+  if (tMax != null) {
+    plot.setAttribute('graph', {
+      tMax: decodeURIComponent(tMax)
+    });
+  }
+  if (xMin != null) {
+    plot.setAttribute('graph', {
+      xMin: decodeURIComponent(xMin)
+    });
+  }
+  if (xMax != null) {
+    plot.setAttribute('graph', {
+      xMax: decodeURIComponent(xMax)
+    });
+  }
+  if (zMin != null) {
+    plot.setAttribute('graph', {
+      zMin: decodeURIComponent(zMin)
+    });
+  }
+  if (zMax != null) {
+    plot.setAttribute('graph', {
+      zMax: decodeURIComponent(zMax)
+    });
   }
 
   // const button = document.querySelector("#button");
