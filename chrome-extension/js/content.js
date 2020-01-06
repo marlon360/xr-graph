@@ -27,12 +27,12 @@ function updateButton() {
         if (document.getElementById("vr-button") == null) {
             const anchor = document.createElement("a");
             anchor.id = "vr-button";
-            anchor.href = "http://graph3js.now.sh/?func=" + encodedFunction;
+            anchor.href = "http://vr-graph.now.sh/?func=" + encodedFunction;
             anchor.target = "_blank";
             anchor.text = "View in VR";
             container.appendChild(anchor);
         } else {
-            document.getElementById("vr-button").href = "http://graph3js.now.sh/?func=" + encodedFunction;
+            document.getElementById("vr-button").href = "http://vr-graph.now.sh/?func=" + encodedFunction;
         }
 
     }
