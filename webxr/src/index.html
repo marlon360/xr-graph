@@ -98,6 +98,26 @@
   const zsliderup = document.querySelector("#zslider-up");
   const zsliderdown = document.querySelector("#zslider-down");
 
+  function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+  }
+
+  const funcParameter = findGetParameter("func");
+  if (funcParameter != null) {
+      plot.setAttribute('graph', {
+        function: decodeURIComponent(funcParameter)
+      });
+  }
+
   // const button = document.querySelector("#button");
   // const sliderText = document.querySelector("#text");
   xsliderup.addEventListener('slider-released', (evt) => {
