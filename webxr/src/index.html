@@ -31,7 +31,7 @@
       <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder>
 
 
-        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="xMin: -7; xMax: 7; zMin: 0; zMax: 6.3; segmentsMultiplier: 2; showGrid: false; showGridLabels: false"></a-entity >
+        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="xMin: -7; xMax: 7; zMin: 0; zMax: 6.3; segmentsMultiplier: 2; showGrid: false; showGridLabels: false; function: cos(x) +sin(y)"></a-entity >
 
       <a-entity position="-0.6 1.4 -0.2" rotation="0 150 0">
         <a-entity slider-events id="xslider-up" ui-slider="color: red; min: 0; max: 10; value: 6" rotation="0 0 90"></a-entity>
@@ -54,10 +54,10 @@
         <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: zMin;"></a-entity>
       </a-entity>
 
-      <a-entity position="0 0.6 0">
+      <!-- <a-entity position="0 0.6 0">
       <a-entity position="-0.9 0.6 0.4" rotation="0 90 0" text="value: activate PI;align: center"></a-entity>
       <a-entity id="pi-toggle" ui-toggle position="-0.9 0.4 0.4" rotation="0 180 90"></a-entity>
-      </a-entity>
+      </a-entity> -->
 
       <a-entity position="0.9 0.6 0">
         <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: reset graph transform;align: center"></a-entity>
@@ -158,9 +158,9 @@
 
   // const button = document.querySelector("#button");
   // const sliderText = document.querySelector("#text");
-  xsliderup.addEventListener('slider-released', (evt) => {
+  xsliderup.addEventListener('change', (evt) => {
     var value = evt.detail.value;
-    value = Math.floor(value);
+    value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
       xMax: value
     })
@@ -168,28 +168,29 @@
 
   xsliderup.addEventListener('change', (evt) => {
     var value = evt.detail.value;
+    value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
       xMax: value
     })
   })
 
-  xsliderdown.addEventListener('slider-released', (evt) => {
+  xsliderdown.addEventListener('change', (evt) => {
     var value = evt.detail.value;
-    value = Math.floor(value);
+    value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
       xMin: value
     })
   })
-  zsliderup.addEventListener('slider-released', (evt) => {
+  zsliderup.addEventListener('change', (evt) => {
     var value = evt.detail.value;
-    value = Math.floor(value);
+    value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
       zMax: value
     })
   })
-  zsliderdown.addEventListener('slider-released', (evt) => {
+  zsliderdown.addEventListener('change', (evt) => {
     var value = evt.detail.value;
-    value = Math.floor(value);
+    value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
       zMin: value
     })
@@ -197,22 +198,34 @@
 
   const sliders = [xsliderup, xsliderdown, zsliderup, zsliderdown]
   const activatePI = () => {
+    this.pi = true;
     sliders.forEach((element) => {
       element.setAttribute('data-slider-pi-multiplier');
-      const sliderEvents = element.components['slider-events']
-      sliderEvents.onGrabEnd();
     });
+    let currentSettings = plot.getAttribute('graph');
+    plot.setAttribute('graph', {
+      xMin: currentSettings.xMin * Math.PI,
+      xMax: currentSettings.xMax * Math.PI,
+      zMin: currentSettings.zMin * Math.PI,
+      zMax: currentSettings.zMax * Math.PI,
+    })
     this.sliderTextEntities = Array.prototype.slice.call(document.querySelectorAll('a-entity[slider-text]'));
     this.sliderTextEntities.forEach(function (el){
       el.components['slider-text'].forceUpdate();
     })
   }
   const deactivatePI = () => {
+    this.pi = false;
     sliders.forEach((element) => {
       element.removeAttribute('data-slider-pi-multiplier');
-      const sliderEvents = element.components['slider-events']
-      sliderEvents.onGrabEnd();
     });
+    let currentSettings = plot.getAttribute('graph');
+    plot.setAttribute('graph', {
+      xMin: currentSettings.xMin / Math.PI,
+      xMax: currentSettings.xMax / Math.PI,
+      zMin: currentSettings.zMin / Math.PI,
+      zMax: currentSettings.zMax / Math.PI,
+    })
     this.sliderTextEntities = Array.prototype.slice.call(document.querySelectorAll('a-entity[slider-text]'));
     this.sliderTextEntities.forEach(function (el){
       el.components['slider-text'].forceUpdate();
