@@ -21,6 +21,12 @@ AFRAME.registerComponent('graph', {
         zMax: {
             default: 10
         },
+        tMin: {
+            default: 0
+        },
+        tMax: {
+            default: 50
+        },
         segmentsMultiplier: {
             default: 2
         },
