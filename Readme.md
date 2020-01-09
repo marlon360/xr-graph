@@ -8,6 +8,9 @@ With the provided browser extension you can view functions directly from [https:
 ![AR](./media/ar.gif)
 
 ## How to run locally
+0. Requirements
+    - Node.js
+    - NPM
 
 1. Navigate to the `webxr` folder.
 
