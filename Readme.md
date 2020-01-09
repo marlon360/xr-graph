@@ -27,3 +27,7 @@ With the provided browser extension you can view functions directly from [https:
 4. Navigate to [https://localhost:8080](https://localhost:8080) for VR experience
 
 5. Navigate to [https://localhost:8080/ar.html](https://localhost:8080/ar.html) for AR experience
+
+Marker for AR:
+
+<img src="./webxr/src/images/marker.png" alt="ar marker" width="300"/>
