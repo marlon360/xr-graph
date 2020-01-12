@@ -243,7 +243,7 @@ AFRAME.registerComponent('graph', {
     createWireMaterial: function(segments = 40) {
         if (this.wireTexture == null) {
             var loader = new THREE.TextureLoader();
-            const squareImageUrl = require('../images/square.png').default;
+            const squareImageUrl = require('../../images/square.png').default;
             this.wireTexture = loader.load(squareImageUrl);
         }
         this.wireTexture.wrapS = this.wireTexture.wrapT = THREE.RepeatWrapping;
@@ -253,7 +253,7 @@ AFRAME.registerComponent('graph', {
     createTransparentWireMaterial: function(width, height){
         const transparentWireMaterial = new THREE.MeshBasicMaterial();
         if (this.alphaTexture == null) {
-            const alphaMapURL = require('../images/square_inv.png').default;
+            const alphaMapURL = require('../../images/square_inv.png').default;
             var loader = new THREE.TextureLoader();
             this.alphaTexture = loader.load(alphaMapURL);
         }

@@ -7,7 +7,7 @@ require('aframe-ui-widgets');
 require('./components/aframe-aabb-collider');
 require('./components/aframe-parent-constraint');
 require('./components/helper');
-require('./components/Graph');
+require('./components/GraphComponent/Graph');
 
   AFRAME.registerComponent('interaction-hands', {
     init: function () {

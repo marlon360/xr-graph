@@ -1,6 +1,6 @@
 require('aframe');
 require('ar.js/aframe/build/aframe-ar')
-require('./components/Graph');
+require('./components/GraphComponent/Graph');
 
 
 
