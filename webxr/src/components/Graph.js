@@ -248,7 +248,7 @@ AFRAME.registerComponent('graph', {
         }
         this.wireTexture.wrapS = this.wireTexture.wrapT = THREE.RepeatWrapping;
         this.wireTexture.repeat.set(segments, segments);
-        return new THREE.MeshBasicMaterial({ map: this.data.showWireframe ? this.wireTexture : null, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
+        return new THREE.MeshStandardMaterial({roughness: 1, metalness: 0.2, map: this.data.showWireframe ? this.wireTexture : null, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
     },
     createTransparentWireMaterial: function(width, height){
         const transparentWireMaterial = new THREE.MeshBasicMaterial();
