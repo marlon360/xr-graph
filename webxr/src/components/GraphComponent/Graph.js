@@ -56,6 +56,9 @@ AFRAME.registerComponent('graph', {
         this.root = new THREE.Group();
         this.root.add(this.graph);
 
+        var boundingBox = this.createColliderBox(this.expression, 20);
+        this.el.object3D.colliderBox.copy( boundingBox ).applyMatrix4( this.graph.matrixWorld );
+
         if (this.data.showGrid) {
             this.grid = this.createGrid();
             this.root.add(this.grid);
@@ -73,8 +76,7 @@ AFRAME.registerComponent('graph', {
         //root.add(this.makeZeroPlanes())
         this.el.setObject3D('mesh', this.root)
 
-        var boundingBox = this.createColliderBox(this.expression, 20);
-        this.el.object3D.colliderBox.copy( boundingBox ).applyMatrix4( this.graph.matrixWorld );
+        
     },
     getParameterExtrema: function (expression) {
         let parameterExtrema = {};
@@ -82,10 +84,10 @@ AFRAME.registerComponent('graph', {
             let min = -6;
             let max = 6;
             if (this.data[param+"Min"] != null) {
-                min = this.data[param+"Min"]
+                min = parseFloat(this.data[param+"Min"])
             }
             if (this.data[param+"Max"] != null) {
-                max = this.data[param+"Max"]
+                max = parseFloat(this.data[param+"Max"])
             }
             parameterExtrema[param] = {
                 min: min,
@@ -98,8 +100,8 @@ AFRAME.registerComponent('graph', {
     },
     createColliderBox: function (expression, segments = 100) {
 
-        const extrema = this.getParameterExtrema(expression);
-        const parameters = expression.getParameters();
+        const extrema = this.getParameterExtrema(expression);        
+        const parameters = expression.getParameters();        
 
         let explicitFunctionParameter = [];
 
@@ -111,7 +113,10 @@ AFRAME.registerComponent('graph', {
                 }
                 explicitFunctionParameter[segmentIndex][i] = extremum.min + extremum.range / segments * segmentIndex;
             }
-        }        
+        }
+
+        console.log(explicitFunctionParameter);
+        
 
         this.xMin = null;
         this.xMax = null;
@@ -128,10 +133,18 @@ AFRAME.registerComponent('graph', {
         for (const variable of expression.getVariables()) {
             variables[variable] = 1;
             if (this.data[variable] != null) {
-                variables[variable] = this.data[variable]
+                variables[variable] = parseFloat(this.data[variable])
             }
         }
-        const func = expression.getJSFunction(variables);
+        let JSFunc = expression.getJSFunction(variables);
+        const inputSize = expression.getInputSize();
+        const outputSize = expression.getOutputSize();
+        let func;
+        if (inputSize == 2 && outputSize == 1) {
+            func = (x,y) => [x,JSFunc(x,y),y]
+        } else {
+            func = JSFunc;
+        }
         for (let i = 0; i < explicitFunctionParameter.length; i++) {
             xValue = func(...explicitFunctionParameter[i])[0];
             yValue = func(...explicitFunctionParameter[i])[1];
@@ -158,6 +171,11 @@ AFRAME.registerComponent('graph', {
         }
         const minVec = new THREE.Vector3(this.xMin, this.yMin, this.zMin);
         const maxVec = new THREE.Vector3(this.xMax, this.yMax, this.zMax);
+
+        this.xRange = this.xMax - this.xMin;
+        this.yRange = this.yMax - this.yMin;
+        this.zRange = this.zMax - this.zMin;
+
         return new THREE.Box3(minVec, maxVec)
     },
     tick: function () {
@@ -255,7 +273,10 @@ AFRAME.registerComponent('graph', {
         return axes;
     },
     createGrid: function () {
-
+        console.log({
+            xrange: this.xRange
+        });
+        
         this.gridGeometry = new THREE.PlaneGeometry(this.xRange, this.zRange);
         this.gridGeometry.scale(1, 1, 1);
         this.gridGeometry.rotateX(-Math.PI / 2)
