@@ -6,11 +6,19 @@ export class MathGraphMaterial {
 
         this.expression = expression;
 
+        const squareImageUrl = require('../../images/square.png').default;
+        var loader = new THREE.TextureLoader();
+        var texture = loader.load(squareImageUrl);
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
         this.uniforms = {
             colorB: {type: 'vec3', value: new Color(0xACB6E5)},
             colorA: {type: 'vec3', value: new Color(0x74ebd5)},
             zMin: {type: 'float', value: -2},
             zMax: {type: 'float', value: 1},
+            texture1: { type: "t", value:texture },
+            repeat: { type: "float", value: 10 },
+            wireframeActive: { type: "bool", value: true}
         }
 
         this.expression.getParameters().forEach(param => {
@@ -49,7 +57,8 @@ export class MathGraphMaterial {
 
     vertexShader() {
         return `
-        varying vec3 vUv;
+        varying vec2 vUv;
+        varying vec3 pos;
         
         ${this.expression.getParameters().map((param) => `uniform float ${param}Min;\nuniform float ${param}Max;\nfloat ${param}Range = ${param}Max - ${param}Min;\n`).join("\n")}
 
@@ -61,9 +70,10 @@ export class MathGraphMaterial {
         }
     
         void main() {
-            vUv = userDefinedPosition(); 
+            vUv = uv; 
 
             vec3 new_position = userDefinedPosition();
+            pos = new_position;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(new_position, 1.0);
         }
         `
@@ -71,13 +81,17 @@ export class MathGraphMaterial {
 
     fragmentShader() {
     return `
+        uniform sampler2D texture1;
+        uniform float repeat;
+        uniform bool wireframeActive;
+
         uniform float zMin; 
         uniform float zMax; 
 
         float yRange = zMax - zMin;
 
-        varying vec3 vUv;
-
+        varying vec2 vUv;
+        varying vec3 pos;
 
         float HueToRGB(float f1, float f2, float hue) {
             if (hue < 0.0)
@@ -120,7 +134,7 @@ export class MathGraphMaterial {
         }
 
         vec4 userDefinedColor() {
-            float h = 0.7 * (zMax - vUv.y) / yRange;
+            float h = 0.7 * (zMax - pos.y) / yRange;
             float s = 1.0;
             float l = 0.5;
             return vec4(HSLToRGB(vec3(h, s, l)), 1.0);
@@ -128,6 +142,9 @@ export class MathGraphMaterial {
 
         void main() {
             vec4 color = userDefinedColor();
+            if (wireframeActive) {
+                color = color * texture2D(texture1, vUv * repeat);
+            }
             gl_FragColor = color;
         }
         `

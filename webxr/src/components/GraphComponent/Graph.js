@@ -113,10 +113,7 @@ AFRAME.registerComponent('graph', {
                 }
                 explicitFunctionParameter[segmentIndex][i] = extremum.min + extremum.range / segments * segmentIndex;
             }
-        }
-
-        console.log(explicitFunctionParameter);
-        
+        }        
 
         this.xMin = null;
         this.xMax = null;
@@ -209,6 +206,8 @@ AFRAME.registerComponent('graph', {
             }
         });
 
+        this.graph.material.uniforms.wireframeActive.value = this.data.showWireframe;
+
     },
     createCurve: function (expression) {
 
@@ -272,17 +271,13 @@ AFRAME.registerComponent('graph', {
         axes.position.set(this.xMin, this.yMin, this.zMin)
         return axes;
     },
-    createGrid: function () {
-        console.log({
-            xrange: this.xRange
-        });
-        
+    createGrid: function () {        
         this.gridGeometry = new THREE.PlaneGeometry(this.xRange, this.zRange);
         this.gridGeometry.scale(1, 1, 1);
         this.gridGeometry.rotateX(-Math.PI / 2)
         this.gridGeometry.rotateY(Math.PI)
 
-        const graphMesh = new THREE.Mesh(this.gridGeometry, this.createTransparentWireMaterial(this.xRange, this.zRange));
+        const graphMesh = new THREE.Mesh(this.gridGeometry, this.d(this.xRange / 10, this.zRange / 10));
         graphMesh.position.set(this.xMin + this.xRange / 2, this.yMin, this.zMin + this.zRange / 2);
 
         const grid = new THREE.Group();
