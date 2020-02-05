@@ -1,32 +1,11 @@
 import SpriteText from 'three-spritetext';
-import { parse } from './MathParser';
+import { MathExpression } from './MathExpression';
+import { MathGraphMaterial } from './MathGraphShader';
+import { MathCurveMaterial } from './MathCurveShader';
+const createTubeGeometry = require('./createTubeGeometry');
 
 AFRAME.registerComponent('graph', {
     schema: {
-        xMin: {
-            default: -10
-        },
-        xMax: {
-            default: 10
-        },
-        yMin: {
-            default: -10
-        },
-        yMax: {
-            default: 10
-        },
-        zMin: {
-            default: -10
-        },
-        zMax: {
-            default: 10
-        },
-        tMin: {
-            default: 0
-        },
-        tMax: {
-            default: 50
-        },
         segmentsMultiplier: {
             default: 2
         },
@@ -46,10 +25,10 @@ AFRAME.registerComponent('graph', {
             default: "f(u, v) = [1.5 * u, 0.1 * u^2 * cos(v), 0.1 * u^2 * sin(v)]"
         }
     },
-    init: function() {
-
+    init: function () {
+        this.el.object3D.colliderBox = new THREE.Box3();
     },
-    update: function() {
+    update: function () {
 
         // function mapping:
         // 1 input 1 output = curve
@@ -58,15 +37,19 @@ AFRAME.registerComponent('graph', {
         // 2 input 1 output = graph (x,y,f(x,y))
         // 2 input 3 output = graph
 
-        this.function = parse(this.data.function); 
-                
-        if (this.function.inputSize == 1) {
-            this.graph = this.createCurve(this.function.func, this.data);
-        } else if (this.function.inputSize == 2) {
-            if (this.function.outputSize == 1) {
-                this.graph = this.createGraph((x,y) => [x, y, this.function.func(x,y)], this.data);
+        this.expression = new MathExpression(this.data.function);
+
+        this.function = this.expression.getJSFunction();
+
+        const inputSize = this.expression.getInputSize();
+        const outputSize = this.expression.getOutputSize();
+        if (inputSize == 1) {
+            this.createCurve(this.expression);
+        } else if (inputSize == 2) {
+            if (outputSize == 1) {
+                this.createGraph(this.expression);
             } else {
-                this.graph = this.createGraph(this.function.func, this.data);
+                this.createGraph(this.expression);
             }
         }
 
@@ -84,20 +67,52 @@ AFRAME.registerComponent('graph', {
         if (this.data.showAxes) {
             this.root.add(this.makeAxes())
         }
-        
-        this.root.scale.set(0.1,0.1,0.1)
-        
+
+        this.root.scale.set(0.1, 0.1, 0.1)
+
         //root.add(this.makeZeroPlanes())
         this.el.setObject3D('mesh', this.root)
 
-        this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);        
+        var boundingBox = this.createColliderBox(this.expression, 20);
+        this.el.object3D.colliderBox.copy( boundingBox ).applyMatrix4( this.graph.matrixWorld );
     },
-    tick: function() {
-        this.el.object3D.colliderBox = new THREE.Box3().setFromObject(this.graph);
+    getParameterExtrema: function (expression) {
+        let parameterExtrema = {};
+        expression.getParameters().forEach(param => {
+            let min = -6;
+            let max = 6;
+            if (this.data[param+"Min"] != null) {
+                min = this.data[param+"Min"]
+            }
+            if (this.data[param+"Max"] != null) {
+                max = this.data[param+"Max"]
+            }
+            parameterExtrema[param] = {
+                min: min,
+                max: max,
+                range: max - min
+            }
+        });
+        
+        return parameterExtrema;
     },
-    computeMinMaxRange: function (geometry) {
+    createColliderBox: function (expression, segments = 100) {
 
-        // reset
+        const extrema = this.getParameterExtrema(expression);
+        const parameters = expression.getParameters();
+
+        let explicitFunctionParameter = [];
+
+        for (let i = 0; i < parameters.length; i++) {
+            const extremum = extrema[parameters[i]];
+            for (let segmentIndex = 0; segmentIndex <= segments; segmentIndex++) {
+                if (i == 0) {
+                    explicitFunctionParameter[segmentIndex] = new Array(parameters.length);
+                }
+                explicitFunctionParameter[segmentIndex][i] = extremum.min + extremum.range / segments * segmentIndex;
+            }
+        }        
+
         this.xMin = null;
         this.xMax = null;
         this.yMin = null;
@@ -108,139 +123,107 @@ AFRAME.registerComponent('graph', {
         let xValue;
         let yValue;
         let zValue;
-        for(let i = 0; i < geometry.attributes.position.array.length; i += 3) {
 
-            xValue = geometry.attributes.position.array[i];
-            yValue = geometry.attributes.position.array[i + 1];
-            zValue = geometry.attributes.position.array[i + 2];
+        let variables = {}
+        for (const variable of expression.getVariables()) {
+            variables[variable] = 1;
+            if (this.data[variable] != null) {
+                variables[variable] = this.data[variable]
+            }
+        }
+        const func = expression.getJSFunction(variables);
+        for (let i = 0; i < explicitFunctionParameter.length; i++) {
+            xValue = func(...explicitFunctionParameter[i])[0];
+            yValue = func(...explicitFunctionParameter[i])[1];
+            zValue = func(...explicitFunctionParameter[i])[2];
 
-            if(this.xMin == null || xValue < this.xMin) {
+            if (this.xMin == null || xValue < this.xMin) {
                 this.xMin = xValue
             }
-            if(this.xMax == null || xValue > this.xMax) {
+            if (this.xMax == null || xValue > this.xMax) {
                 this.xMax = xValue
             }
-            if(this.yMin == null || yValue < this.yMin) {
+            if (this.yMin == null || yValue < this.yMin) {
                 this.yMin = yValue
             }
-            if(this.yMax == null || yValue > this.yMax) {
+            if (this.yMax == null || yValue > this.yMax) {
                 this.yMax = yValue
             }
-            if(this.zMin == null || zValue < this.zMin) {
+            if (this.zMin == null || zValue < this.zMin) {
                 this.zMin = zValue
             }
-            if(this.zMax == null || zValue > this.zMax) {
+            if (this.zMax == null || zValue > this.zMax) {
                 this.zMax = zValue
             }
         }
-        this.xRange = this.xMax - this.xMin;
-        this.yRange = this.yMax - this.yMin;
-        this.zRange = this.zMax - this.zMin;
-
+        const minVec = new THREE.Vector3(this.xMin, this.yMin, this.zMin);
+        const maxVec = new THREE.Vector3(this.xMax, this.yMax, this.zMax);
+        return new THREE.Box3(minVec, maxVec)
     },
-    createGraph: function(func, setting) {
-        // set default values
-        const xMin = setting && setting.xMin,
-            xMax = setting && setting.xMax,
-            zMin = setting && setting.zMin,
-            zMax = setting && setting.zMax,
-            segmentsMultiplier = setting && setting.segmentsMultiplier;
-        
-        // calculate ranges
-        const xRange = xMax - xMin;
-        const zRange = zMax - zMin;
-
-        let segments = Math.max(xRange, zRange, 20);
-        segments = Math.floor(segments) * segmentsMultiplier;
-
-        // x and y from 0 to 1
-        const meshFunction = (x, z, vec3) => {
-            // map x,y to range
-            x = xRange * x + xMin;
-            z = zRange * z + zMin;
-            // get z value from function
-            const result = func(x, z);
-            if (!isNaN(result[0]))
-                vec3.set(result[0], result[2] || 0, result[1] || 0);
-        };
-
-        this.graphGeometry = new THREE.ParametricBufferGeometry(meshFunction, segments, segments);
-        this.graphGeometry.scale(1, 1, 1);
-
-        this.computeMinMaxRange(this.graphGeometry);
-        
-        var colArr = []
-        let color;
-        for(let i = 1; i < this.graphGeometry.attributes.position.array.length; i += 3) {
-            const yVal = this.graphGeometry.attributes.position.array[i];            
-            color = new THREE.Color(0xffffff);
-            // only change color if not infinte
-            if (isFinite(this.yRange)) {
-                color.setHSL(0.7 * (this.yMax - yVal) / this.yRange, 1, 0.5);
-            }            
-            colArr = colArr.concat([color.r * 255, color.g * 255, color.b * 255]);
-        }        
-        var colors = new Uint8Array(colArr);
-       
-       // Don't forget to normalize the array! (third param = true)
-       this.graphGeometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3, true) );
-       
-        this.wireMaterial = this.createWireMaterial(segments);        
-
-        const graphMesh = new THREE.Mesh(this.graphGeometry, this.wireMaterial);
-        return graphMesh;
+    tick: function () {
+        var boundingBox = this.createColliderBox(this.expression, 20);
+        this.el.object3D.colliderBox.copy( boundingBox ).applyMatrix4( this.graph.matrixWorld );
     },
-    createCurve: function(func, setting) {
-         // set default values
-         const segments = setting && setting.segments || 100,
-         radiusSegments = setting && setting.radiusSegments || 6,
-         tubeRadius = setting && setting.tubeRadius ||0.1,
-         tMin = setting && setting.tMin || 0,
-         tMax = setting && setting.tMax || 10;
+    createGraph: function (expression) {
 
-        const tRange = tMax - tMin;
-
-        function CustomPath (scale) {
-            THREE.Curve.call(this);
-            this.scale = scale;
+        if (this.graphGeometry == null) {
+            this.graphGeometry = new THREE.PlaneBufferGeometry(1, 1, 200, 200);
+            this.graphGeometry.scale(1, 1, 1);
+            this.graphMat = new MathGraphMaterial(expression);
+            this.graph = new THREE.Mesh(this.graphGeometry, this.graphMat.material);
         }
 
-        CustomPath.prototype = Object.create(THREE.Curve.prototype);
-        CustomPath.prototype.constructor = CustomPath;
-        CustomPath.prototype.getPoint = function(t) {
-            t = t * tRange + tMin;
-
-            if (Array.isArray(func(t))) {
-                return new THREE.Vector3(func(t)[0],func(t)[2] || 0,func(t)[1] || 0);
-            } else {
-                // draw in xz plane a normal graph
-                return new THREE.Vector3(t, func(t), 0);
+        expression.getParameters().forEach(param => {
+            let min = -6;
+            let max = 6;
+            if (this.data[param+"Min"] != null) {
+                min = this.data[param+"Min"]
             }
-        }
+            if (this.data[param+"Max"] != null) {
+                max = this.data[param+"Max"]
+            }
+            this.graph.material.uniforms[param+"Min"].value = min;
+            this.graph.material.uniforms[param+"Max"].value = max;
+        });
+        expression.getVariables().forEach(param => {
+            if (this.data[param] != null) {
+                 this.graph.material.uniforms[param].value = this.data[param]
+            }
+        });
 
-        const path = new CustomPath(1);
-
-        const tubeGeometry = new THREE.TubeBufferGeometry(path, segments, tubeRadius, radiusSegments, false);
-        this.computeMinMaxRange(tubeGeometry);
-
-        var colArr = []
-        for(let i = 1; i < tubeGeometry.attributes.position.array.length; i += 3) {
-            const color = new THREE.Color(0xffffff);
-            color.setHSL((1 * i / tubeGeometry.attributes.position.array.length) % 1 * 0.7, 1, 0.5);            
-            colArr = colArr.concat([color.r * 255, color.g * 255, color.b * 255]);
-        }        
-        var colors = new Uint8Array(colArr);
-       
-       // Don't forget to normalize the array! (third param = true)
-       tubeGeometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3, true) );
-
-        const wireMaterial = this.createWireMaterial(segments);
-        if (wireMaterial.map) {
-            wireMaterial.map.repeat.set(segments, radiusSegments);
-        }
-        return new THREE.Mesh(tubeGeometry, wireMaterial);
     },
-    createWireMaterial: function(segments = 40) {
+    createCurve: function (expression) {
+
+        const numSides = 8;
+        const subdivisions = 100;
+
+        if (this.graphGeometry == null) {
+            this.graphGeometry = createTubeGeometry(numSides, subdivisions);
+            this.graphGeometry.scale(1, 1, 1);
+            this.graphMat = new MathCurveMaterial(expression, subdivisions)
+            this.graph = new THREE.Mesh(this.graphGeometry, this.graphMat.material);
+        }
+
+        expression.getParameters().forEach(param => {
+            let min = -6;
+            let max = 6;
+            if (this.data[param+"Min"] != null) {
+                min = this.data[param+"Min"]
+            }
+            if (this.data[param+"Max"] != null) {
+                max = this.data[param+"Max"]
+            }
+            this.graph.material.uniforms[param+"Min"].value = min;
+            this.graph.material.uniforms[param+"Max"].value = max;
+        });
+        expression.getVariables().forEach(param => {
+            if (this.data[param] != null) {
+                 this.graph.material.uniforms[param].value = this.data[param]
+            }
+        });
+        
+    },
+    createWireMaterial: function (segments = 40) {
         if (this.wireTexture == null) {
             var loader = new THREE.TextureLoader();
             const squareImageUrl = require('../../images/square.png').default;
@@ -248,9 +231,9 @@ AFRAME.registerComponent('graph', {
         }
         this.wireTexture.wrapS = this.wireTexture.wrapT = THREE.RepeatWrapping;
         this.wireTexture.repeat.set(segments, segments);
-        return new THREE.MeshStandardMaterial({roughness: 1, metalness: 0.2, map: this.data.showWireframe ? this.wireTexture : null, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
+        return new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0.2, map: this.data.showWireframe ? this.wireTexture : null, vertexColors: THREE.VertexColors, side: THREE.DoubleSide });
     },
-    createTransparentWireMaterial: function(width, height){
+    createTransparentWireMaterial: function (width, height) {
         const transparentWireMaterial = new THREE.MeshBasicMaterial();
         if (this.alphaTexture == null) {
             const alphaMapURL = require('../../images/square_inv.png').default;
@@ -271,8 +254,8 @@ AFRAME.registerComponent('graph', {
         axes.position.set(this.xMin, this.yMin, this.zMin)
         return axes;
     },
-    createGrid: function() {
-        
+    createGrid: function () {
+
         this.gridGeometry = new THREE.PlaneGeometry(this.xRange, this.zRange);
         this.gridGeometry.scale(1, 1, 1);
         this.gridGeometry.rotateX(-Math.PI / 2)
@@ -288,13 +271,13 @@ AFRAME.registerComponent('graph', {
         this.gridGeometry2.scale(1, 1, 1);
         const graphMesh2 = new THREE.Mesh(this.gridGeometry2, this.createTransparentWireMaterial(this.xRange, this.yRange));
         graphMesh2.position.set(this.xMin + this.xRange / 2, this.yMin + this.yRange / 2, this.zMin);
-        
+
         // front
         this.gridGeometry3 = new THREE.PlaneBufferGeometry(this.xRange, this.yRange);
         this.gridGeometry3.scale(1, 1, 1);
         this.gridGeometry3.rotateX(Math.PI)
         const graphMesh3 = new THREE.Mesh(this.gridGeometry3, this.createTransparentWireMaterial(this.xRange, this.yRange));
-        graphMesh3.position.set(this.xMin + this.xRange / 2,  this.yMin + this.yRange / 2, this.zMax);
+        graphMesh3.position.set(this.xMin + this.xRange / 2, this.yMin + this.yRange / 2, this.zMax);
 
         // left
         this.gridGeometry4 = new THREE.PlaneBufferGeometry(this.zRange, this.yRange);
@@ -303,13 +286,13 @@ AFRAME.registerComponent('graph', {
         this.gridGeometry4.rotateX(Math.PI)
         const graphMesh4 = new THREE.Mesh(this.gridGeometry4, this.createTransparentWireMaterial(this.zRange, this.yRange));
         graphMesh4.position.set(this.xMin, this.yMin + this.yRange / 2, this.zMin + this.zRange / 2);
-        
+
         // right
         this.gridGeometry5 = new THREE.PlaneBufferGeometry(this.zRange, this.yRange);
         this.gridGeometry5.scale(1, 1, 1);
         this.gridGeometry5.rotateY(Math.PI / 2 + Math.PI)
         const graphMesh5 = new THREE.Mesh(this.gridGeometry5, this.createTransparentWireMaterial(this.zRange, this.yRange));
-        graphMesh5.position.set(this.xMax,  this.yMin + this.yRange / 2, this.zMin + this.zRange / 2);
+        graphMesh5.position.set(this.xMax, this.yMin + this.yRange / 2, this.zMin + this.zRange / 2);
 
         grid.add(graphMesh);
         grid.add(graphMesh2);
@@ -319,7 +302,7 @@ AFRAME.registerComponent('graph', {
 
         return grid;
     },
-    createAxesLabels: function() {
+    createAxesLabels: function () {
 
         const labels = new THREE.Group();
 
@@ -342,11 +325,11 @@ AFRAME.registerComponent('graph', {
         const zMinText = new SpriteText((Math.floor(this.zMin * 100) / 100).toString(), 0.5, "blue");
         zMinText.position.set(this.xMin, this.yMin, this.zMin + 0.2);
         var zMaxText = new SpriteText((Math.floor(this.zMax * 100) / 100).toString(), 0.5, "blue");
-        zMaxText.position.set(this.xMin, this.yMin ,this.zMin + this.zRange)
+        zMaxText.position.set(this.xMin, this.yMin, this.zMin + this.zRange)
 
         labels.add(zMinText);
         labels.add(zMaxText);
 
         return labels;
     }
-  })
+})

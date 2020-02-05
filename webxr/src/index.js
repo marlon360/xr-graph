@@ -9,7 +9,7 @@ require('./components/aframe-parent-constraint');
 require('./components/helper');
 require('./components/GraphComponent/Graph');
 
-  AFRAME.registerComponent('interaction-hands', {
+AFRAME.registerComponent('interaction-hands', {
     init: function () {
         this.otherHand = null;
 
@@ -27,16 +27,16 @@ require('./components/GraphComponent/Graph');
 
         this.system.registerMe(this);
     },
-    update: function() {
+    update: function () {
         this.registerListeners();
     },
-    registerListeners: function() {
-        this.el.addEventListener('hitclosest', this.onHit)
+    registerListeners: function () {
+        this.el.addEventListener('hitstart', this.onHit)
         this.el.addEventListener('triggerdown', this.onGrab)
         this.el.addEventListener('triggerup', this.onGrabEnd)
-        //this.el.addEventListener('hitclosestclear', this.onHitEnd)
+        this.el.addEventListener('hitend', this.onHitEnd)
     },
-    onGrab: function() {
+    onGrab: function () {
         if (this.hoverEls.length == 0) {
             this.hoverEls = this.el.components['aabb-collider']['intersectedEls']
         }
@@ -56,7 +56,7 @@ require('./components/GraphComponent/Graph');
             }
         }
     },
-    onGrabEnd: function() {
+    onGrabEnd: function () {
         this.grabbing = false;
         if (this.grabElement != null) {
             this.grabElement.removeAttribute("parent-constraint");
@@ -69,16 +69,16 @@ require('./components/GraphComponent/Graph');
             })
         }
     },
-    onStretchEnd: function() {
+    onStretchEnd: function () {
         this.stretching = false;
         this.el.removeAttribute("middle");
         this.el.removeAttribute("stretch")
         this.otherHand.el.removeAttribute("middle");
         this.otherHand.el.removeAttribute("stretch")
     },
-    onStretchStart: function() {
+    onStretchStart: function () {
         this.stretching = true;
-        
+
         // create middle point between hands
         this.el.setAttribute("middle", {
             otherhand: this.otherHand.el
@@ -94,11 +94,12 @@ require('./components/GraphComponent/Graph');
             target: this.grabElement,
             activatedOnInit: true
         })
-        
+
     },
-    onHit: function(evt) {
+    onHit: function (evt) {
         const hitEl = evt.detail.el
-        console.log(evt)
+        //console.log(evt)
+        console.log("hit start")
         if (!hitEl) { return }
         if (Array.isArray(hitEl)) {
             for (let i = 0, sect; i < hitEl.length; i++) {
@@ -109,14 +110,15 @@ require('./components/GraphComponent/Graph');
             this.hoverStart(hitEl, null)
         }
     },
-    onHitEnd: function(el) {
+    onHitEnd: function (el) {
+        console.log("hit end")
         this.hoverEnd(el)
     },
-    hoverStart: function(hitEl, intersection) {    
+    hoverStart: function (hitEl, intersection) {
         const hitEnd = () => {
             this.onHitEnd(hitEl);
             hitEl.removeEventListener('hitend', hitEnd)
-        }    
+        }
         hitEl.addEventListener('hitend', hitEnd)
         const hitElIndex = this.hoverEls.indexOf(hitEl)
         if (hitElIndex === -1) {
@@ -127,7 +129,7 @@ require('./components/GraphComponent/Graph');
             }
         }
     },
-    hoverEnd: function(target) {
+    hoverEnd: function (target) {
         var hoverIndex = this.hoverEls.indexOf(target)
         if (hoverIndex !== -1) {
             // only emit if all hands left
@@ -137,31 +139,31 @@ require('./components/GraphComponent/Graph');
             this.hoverEls.splice(hoverIndex, 1)
         }
     }
-  })
+})
 
 
 AFRAME.registerSystem('interaction-hands', {
     init: function () {
-      this.interactionHands = []
+        this.interactionHands = []
     },
     registerMe: function (comp) {
-      // when second hand registers, store links
-      if (this.interactionHands.length === 1) {
-        this.interactionHands[0].otherHand = comp
-        comp.otherHand = this.interactionHands[0]
-      }
-      this.interactionHands.push(comp)
+        // when second hand registers, store links
+        if (this.interactionHands.length === 1) {
+            this.interactionHands[0].otherHand = comp
+            comp.otherHand = this.interactionHands[0]
+        }
+        this.interactionHands.push(comp)
     },
     unregisterMe: function (comp) {
-      var index = this.interactionHands.indexOf(comp)
-      if (index !== -1) {
-        this.interactionHands.splice(index, 1)
-      }
-      this.interactionHands.forEach(x => {
-        if (x.otherHand === comp) { x.otherHand = null }
-      })
+        var index = this.interactionHands.indexOf(comp)
+        if (index !== -1) {
+            this.interactionHands.splice(index, 1)
+        }
+        this.interactionHands.forEach(x => {
+            if (x.otherHand === comp) { x.otherHand = null }
+        })
     }
-  })
+})
 
 AFRAME.registerComponent('slider-text', {
     schema: {
@@ -170,16 +172,16 @@ AFRAME.registerComponent('slider-text', {
         }
     },
     init: function () {
-      this.onChange = this.onChange.bind(this);
-      this.setText = this.setText.bind(this);
-      this.forceUpdate = this.forceUpdate.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.setText = this.setText.bind(this);
+        this.forceUpdate = this.forceUpdate.bind(this);
 
-      this.data.slider.addEventListener('change', this.onChange)
+        this.data.slider.addEventListener('change', this.onChange)
     },
-    update: function(){
+    update: function () {
         this.forceUpdate();
     },
-    forceUpdate: function() {
+    forceUpdate: function () {
         const sliderComp = this.data.slider.components['ui-slider'];
         this.onChange({
             detail: {
@@ -187,7 +189,7 @@ AFRAME.registerComponent('slider-text', {
             }
         })
     },
-    onChange: function(evt) {
+    onChange: function (evt) {
         var roundedValue = Math.floor(evt.detail.value * 10) / 10
         if (this.data.slider.dataset['sliderPiMultiplier'] != null) {
             this.setText(roundedValue + " * PI");
@@ -195,39 +197,38 @@ AFRAME.registerComponent('slider-text', {
             this.setText(roundedValue);
         }
     },
-    setText: function(text) {
+    setText: function (text) {
         this.el.setAttribute("text", {
             value: text
         })
     }
-  })
+})
 
-  AFRAME.registerComponent('slider-events', {
+AFRAME.registerComponent('slider-events', {
     schema: {},
     init: function () {
-      this.value = 0;
-      this.lastValue = 0;
+        this.value = 0;
+        this.lastValue = 0;
 
-      this.controllers = Array.prototype.slice.call(document.querySelectorAll('a-entity[hand-controls]'));
+        this.controllers = Array.prototype.slice.call(document.querySelectorAll('a-entity[hand-controls]'));
 
-      this.controllers.forEach(function (controller){
-        controller.addEventListener('triggerup', this.onGrabEnd.bind(this));
-      }.bind(this));
+        this.controllers.forEach(function (controller) {
+            controller.addEventListener('triggerup', this.onGrabEnd.bind(this));
+        }.bind(this));
     },
-    onGrabEnd: function() {
+    onGrabEnd: function () {
         const sliderComp = this.el.components['ui-slider'];
         this.value = sliderComp.value || sliderComp.data.value;
         if (this.el.dataset['sliderPiMultiplier'] != null) {
             this.value = this.value * Math.PI
         }
-        if (this.value != this.lastValue) {            
+        if (this.value != this.lastValue) {
             this.el.emit('slider-released', {
                 value: this.value
             })
         }
         this.lastValue = this.value;
     }
-  })
+})
 
 
- 

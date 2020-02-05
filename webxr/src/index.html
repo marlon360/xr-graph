@@ -5,7 +5,7 @@
 </head>
 
 <body>
-  <a-scene shadow="type: pcfsoft" physics="driver: local; debug: true; gravity: 0; friction: 0; restitution: 0;" renderer="antialias: true" cursor="rayOrigin: mouse" raycaster="objects: [cube]">
+  <a-scene stats shadow="type: pcfsoft" physics="driver: local; debug: true; gravity: 0; friction: 0; restitution: 0;" renderer="antialias: true" cursor="rayOrigin: mouse" raycaster="objects: [cube]">
     <a-assets>
       <a-mixin id="touch" class="hands" ></a-mixin>
     </a-assets>
@@ -31,7 +31,7 @@
       <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder>
 
 
-        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="xMin: -6; xMax: 6; zMin: -6; zMax: 6; segmentsMultiplier: 2; showGrid: false; showGridLabels: false; function: cos(x) +sin(y)"></a-entity >
+        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="xMin: -3.2; xMax: 3.2; yMin: -3.2; yMax: 3.2; segmentsMultiplier: 2; showGrid: false; showGridLabels: false; function: f(t) = [cos(a * t), t, sin(t)]"></a-entity >
 
       <a-entity position="-0.6 1.4 -0.2" rotation="0 150 0">
         <a-entity slider-events id="xslider-up" ui-slider="color: red; min: 0; max: 10; value: 6" rotation="0 0 90"></a-entity>
@@ -52,6 +52,12 @@
         <a-entity slider-events id="zslider-down" ui-slider="color: red; min: 0; max: -10; value: -6" rotation="180 0 90"></a-entity>
         <a-entity slider-text="slider: #zslider-down" position="0 0 0.6" rotation="0 -90 0" text="value: -6;"></a-entity>
         <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: zMin;"></a-entity>
+      </a-entity>
+      
+      <a-entity position="-0.1 0.8 -0.5" rotation="0 90 0">
+        <a-entity slider-events id="aslider-down" ui-slider="color: red; min: 1; max: 2.5; value: 1.2" rotation="180 0 90"></a-entity>
+        <a-entity slider-text="slider: #aslider-down" position="0 0 0.6" rotation="0 -90 0" text="value: 1.2;"></a-entity>
+        <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: aValue;"></a-entity>
       </a-entity>
 
       <!-- <a-entity position="0 0.6 0">
@@ -85,8 +91,8 @@
     <!-- <a-box middle="otherhand: #rbox" position="-2 1.5 0"></a-box>
     <a-box id="rbox" position="2 1 0"></a-box> -->
 
-    <a-entity interaction-hands aabb-collider="objects: .grabbable" hand-controls="left" mixin="touch"></a-entity>
-    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="rhand" mixin="touch" hand-controls="right"></a-entity>
+    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="lhand" hand-controls="hand: left; handModelStyle: highPoly" mixin="touch"></a-entity>
+    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="rhand" hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"></a-entity>
 
     <a-entity position="0 1.6 2" camera look-controls wasd-controls></a-entity>
   </a-scene>
@@ -97,6 +103,7 @@
   const xsliderdown = document.querySelector("#xslider-down");
   const zsliderup = document.querySelector("#zslider-up");
   const zsliderdown = document.querySelector("#zslider-down");
+  const asliderdown = document.querySelector("#aslider-down");
 
   function findGetParameter(parameterName) {
     var result = null,
@@ -185,14 +192,21 @@
     var value = evt.detail.value;
     value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
-      zMax: value
+      yMax: value
     })
   })
   zsliderdown.addEventListener('change', (evt) => {
     var value = evt.detail.value;
     value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
-      zMin: value
+      yMin: value
+    })
+  })
+
+  asliderdown.addEventListener('change', (evt) => {
+    var value = evt.detail.value;
+    plot.setAttribute("graph", {
+      a: value
     })
   })
 
@@ -272,7 +286,14 @@
     plot.setAttribute('rotation', '0 0 0');
   })
   
+  // var a = 1;
 
+  // setInterval(() => {
+  //   plot.setAttribute("graph", {
+  //     a: a
+  //   })
+  //   a += 0.001;
+  // }, 10);
   
 
 </script>

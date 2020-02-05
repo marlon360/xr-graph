@@ -28,7 +28,6 @@ if (typeof AFRAME === 'undefined') {
     },
   
     init: function () {
-      console.log("init")
       this.centerDifferenceVec3 = new THREE.Vector3();
       this.clearedIntersectedEls = [];
       this.closestIntersectedEl = null;
@@ -237,7 +236,7 @@ if (typeof AFRAME === 'undefined') {
             el.object3D.boxHelper = new THREE.BoxHelper(
               el.object3D, new THREE.Color(Math.random(), Math.random(), Math.random()));
             el.sceneEl.object3D.add(el.object3D.boxHelper);
-          }
+          } 
           el.object3D.boxHelper.setFromObject(el.object3D);
         }
   
