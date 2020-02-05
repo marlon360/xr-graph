@@ -277,7 +277,7 @@ AFRAME.registerComponent('graph', {
         this.gridGeometry.rotateX(-Math.PI / 2)
         this.gridGeometry.rotateY(Math.PI)
 
-        const graphMesh = new THREE.Mesh(this.gridGeometry, this.d(this.xRange / 10, this.zRange / 10));
+        const graphMesh = new THREE.Mesh(this.gridGeometry, this.createTransparentWireMaterial(this.xRange / 10, this.zRange / 10));
         graphMesh.position.set(this.xMin + this.xRange / 2, this.yMin, this.zMin + this.zRange / 2);
 
         const grid = new THREE.Group();

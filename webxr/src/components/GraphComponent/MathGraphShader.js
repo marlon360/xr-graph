@@ -6,18 +6,11 @@ export class MathGraphMaterial {
 
         this.expression = expression;
 
-        const squareImageUrl = require('../../images/square.png').default;
-        var loader = new THREE.TextureLoader();
-        var texture = loader.load(squareImageUrl);
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
         this.uniforms = {
             colorB: {type: 'vec3', value: new Color(0xACB6E5)},
             colorA: {type: 'vec3', value: new Color(0x74ebd5)},
-            zMin: {type: 'float', value: -2},
-            zMax: {type: 'float', value: 1},
-            texture1: { type: "t", value:texture },
-            repeat: { type: "float", value: 10 },
+            zMin: {type: 'float', value: -3.2},
+            zMax: {type: 'float', value: 3.2},
             wireframeActive: { type: "bool", value: true}
         }
 
@@ -37,6 +30,7 @@ export class MathGraphMaterial {
             side: DoubleSide,
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader(),
+            transparent: true
         })
     }
 
@@ -81,8 +75,6 @@ export class MathGraphMaterial {
 
     fragmentShader() {
     return `
-        uniform sampler2D texture1;
-        uniform float repeat;
         uniform bool wireframeActive;
 
         uniform float zMin; 
@@ -143,7 +135,11 @@ export class MathGraphMaterial {
         void main() {
             vec4 color = userDefinedColor();
             if (wireframeActive) {
-                color = color * texture2D(texture1, vUv * repeat);
+                if (mod(vUv.x, 0.02) < 0.003 || mod(vUv.y, 0.02) < 0.003) {
+                    color = vec4(0.1, 0.1, 0.1, 1);
+                } else {
+                    color = color * 0.0;
+                }
             }
             gl_FragColor = color;
         }
