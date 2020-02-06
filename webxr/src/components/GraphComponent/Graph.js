@@ -27,6 +27,7 @@ AFRAME.registerComponent('graph', {
     },
     init: function () {
         this.el.object3D.colliderBox = new THREE.Box3();
+        this.boundingBox = null;
     },
     update: function () {
 
@@ -40,7 +41,8 @@ AFRAME.registerComponent('graph', {
         this.expression = new MathExpression(this.data.function);
 
         this.function = this.expression.getJSFunction();
-
+        this.boundingBox = this.createColliderBox(this.expression, 20);
+        
         const inputSize = this.expression.getInputSize();
         const outputSize = this.expression.getOutputSize();
         if (inputSize == 1) {
@@ -56,8 +58,9 @@ AFRAME.registerComponent('graph', {
         this.root = new THREE.Group();
         this.root.add(this.graph);
 
-        var boundingBox = this.createColliderBox(this.expression, 20);
-        this.el.object3D.colliderBox.copy( boundingBox ).applyMatrix4( this.graph.matrixWorld );
+        this.el.object3D.colliderBox.copy( this.boundingBox ).applyMatrix4( this.graph.matrixWorld );
+        this.root.add(new THREE.Box3Helper(this.boundingBox, 0xffffff))
+        
 
         if (this.data.showGrid) {
             this.grid = this.createGrid();
@@ -76,7 +79,6 @@ AFRAME.registerComponent('graph', {
         //root.add(this.makeZeroPlanes())
         this.el.setObject3D('mesh', this.root)
 
-        
     },
     getParameterExtrema: function (expression) {
         let parameterExtrema = {};
@@ -100,20 +102,29 @@ AFRAME.registerComponent('graph', {
     },
     createColliderBox: function (expression, segments = 100) {
 
-        const extrema = this.getParameterExtrema(expression);        
+        const extrema = this.getParameterExtrema(expression);
         const parameters = expression.getParameters();        
 
         let explicitFunctionParameter = [];
 
+        function cartesianProduct(arr) {
+            return arr.reduce(function(a,b){
+                return a.map(function(x){
+                    return b.map(function(y){
+                        return x.concat([y]);
+                    })
+                }).reduce(function(a,b){ return a.concat(b) },[])
+            }, [[]])
+        }
+
         for (let i = 0; i < parameters.length; i++) {
             const extremum = extrema[parameters[i]];
+            explicitFunctionParameter[i] = new Array(segments + 1);
             for (let segmentIndex = 0; segmentIndex <= segments; segmentIndex++) {
-                if (i == 0) {
-                    explicitFunctionParameter[segmentIndex] = new Array(parameters.length);
-                }
-                explicitFunctionParameter[segmentIndex][i] = extremum.min + extremum.range / segments * segmentIndex;
+                explicitFunctionParameter[i][segmentIndex] = extremum.min + extremum.range / segments * segmentIndex;
             }
-        }        
+        }
+        explicitFunctionParameter = cartesianProduct(explicitFunctionParameter);
 
         this.xMin = null;
         this.xMax = null;
@@ -176,8 +187,9 @@ AFRAME.registerComponent('graph', {
         return new THREE.Box3(minVec, maxVec)
     },
     tick: function () {
-        var boundingBox = this.createColliderBox(this.expression, 20);
-        this.el.object3D.colliderBox.copy( boundingBox ).applyMatrix4( this.graph.matrixWorld );
+        if (this.boundingBox != null) {
+            this.el.object3D.colliderBox.copy( this.boundingBox ).applyMatrix4( this.graph.matrixWorld );
+        }
     },
     createGraph: function (expression) {
 
@@ -186,6 +198,7 @@ AFRAME.registerComponent('graph', {
             this.graphGeometry.scale(1, 1, 1);
             this.graphMat = new MathGraphMaterial(expression);
             this.graph = new THREE.Mesh(this.graphGeometry, this.graphMat.material);
+            this.graph.frustumCulled = false;
         }
 
         expression.getParameters().forEach(param => {
@@ -206,6 +219,13 @@ AFRAME.registerComponent('graph', {
             }
         });
 
+        if (this.yMax != null) {
+            this.graph.material.uniforms.yBoundaryMax.value = this.yMax;
+        }
+        if (this.yMin != null) {
+            this.graph.material.uniforms.yBoundaryMin.value = this.yMin;
+        }
+
         this.graph.material.uniforms.wireframeActive.value = this.data.showWireframe;
 
     },
@@ -219,6 +239,7 @@ AFRAME.registerComponent('graph', {
             this.graphGeometry.scale(1, 1, 1);
             this.graphMat = new MathCurveMaterial(expression, subdivisions)
             this.graph = new THREE.Mesh(this.graphGeometry, this.graphMat.material);
+            this.graph.frustumCulled = false;
         }
 
         expression.getParameters().forEach(param => {

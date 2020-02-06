@@ -9,8 +9,8 @@ export class MathGraphMaterial {
         this.uniforms = {
             colorB: {type: 'vec3', value: new Color(0xACB6E5)},
             colorA: {type: 'vec3', value: new Color(0x74ebd5)},
-            zMin: {type: 'float', value: -3.2},
-            zMax: {type: 'float', value: 3.2},
+            yBoundaryMin: {type: 'float', value: -3.2},
+            yBoundaryMax: {type: 'float', value: 3.2},
             wireframeActive: { type: "bool", value: true}
         }
 
@@ -77,10 +77,10 @@ export class MathGraphMaterial {
     return `
         uniform bool wireframeActive;
 
-        uniform float zMin; 
-        uniform float zMax; 
+        uniform float yBoundaryMin; 
+        uniform float yBoundaryMax; 
 
-        float yRange = zMax - zMin;
+        float range = yBoundaryMax - yBoundaryMin;
 
         varying vec2 vUv;
         varying vec3 pos;
@@ -126,7 +126,7 @@ export class MathGraphMaterial {
         }
 
         vec4 userDefinedColor() {
-            float h = 0.7 * (zMax - pos.y) / yRange;
+            float h = 0.7 * (yBoundaryMax - pos.y) / range;
             float s = 1.0;
             float l = 0.5;
             return vec4(HSLToRGB(vec3(h, s, l)), 1.0);
@@ -138,7 +138,7 @@ export class MathGraphMaterial {
                 if (mod(vUv.x, 0.02) < 0.003 || mod(vUv.y, 0.02) < 0.003) {
                     color = vec4(0.1, 0.1, 0.1, 1);
                 } else {
-                    color = color * 0.0;
+                    color = vec4(color.xyz, 0.3);
                 }
             }
             gl_FragColor = color;
