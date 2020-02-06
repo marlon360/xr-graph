@@ -30,6 +30,7 @@
   "dependencies": {
     "aframe": "^1.0.4",
     "aframe-aabb-collider-component": "^3.2.0",
+    "aframe-environment-component": "^2.0.0",
     "aframe-event-set-component": "^5.0.0",
     "aframe-extras": "^6.0.1",
     "aframe-log-component": "^1.0.7",

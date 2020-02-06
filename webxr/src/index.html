@@ -10,7 +10,8 @@
       <a-mixin id="touch" class="hands" ></a-mixin>
     </a-assets>
 
-    <a-sky color="#888888"></a-sky>
+    <!-- <a-sky color="#444"></a-sky> -->
+    <a-entity environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 1; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
 
       <!-- <a-entity collider-debug class="grabbable" event-set__hover-start="material.color: blue;"
       event-set__hover-end="material.color: red;" id="mycube" geometry="primitive: box; height: 0.30; width: 0.30; depth: 0.30"
@@ -28,7 +29,7 @@
                     color: #04F">
     </a-entity> -->
       
-      <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder>
+      <!-- <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder> -->
 
 
         <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; segmentsMultiplier: 2; showGrid: false; showGridLabels: true; showWireframe: true; function: f(u,v) = [2 * u, 0.1 * a * u^2 * cos(v), 0.1 * u^2 * sin(v)]"></a-entity >
@@ -83,8 +84,8 @@
         <a-entity id="label-toggle" ui-toggle position="0 0.4 -0.1" rotation="70 -90 0"></a-entity>
       </a-entity>
 
-      <a-entity light="type: point; color: #ffffff; intensity: 0.6; castShadow: true" position="0 3 0"></a-entity>
-      <a-entity light="type: ambient; color: #ffffff; intensity: 0.7;" position="0 3 0"></a-entity>
+      <a-entity light="type: spot; color: #ffffff; intensity: 0.5; castShadow: true" position="0 5 0" rotation="-90 0 0"></a-entity>
+      <a-entity light="type: ambient; color: #ffffff; intensity: 0.4;" position="0 3 0"></a-entity>
 
     <!-- <a-log rotation="0 45 0" position="-2 0 -1"></a-log> -->
 

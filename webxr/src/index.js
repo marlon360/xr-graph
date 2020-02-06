@@ -1,5 +1,6 @@
 require('aframe');
 require('aframe-event-set-component');
+require('aframe-environment-component');
 require('aframe-log-component');
 require('aframe-plot-component');
 require('aframe-ui-widgets');
