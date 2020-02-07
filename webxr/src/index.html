@@ -55,11 +55,13 @@
         <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: zMin;"></a-entity>
       </a-entity>
       
-      <a-entity position="-0.1 0.8 -0.5" rotation="0 90 0">
+      <!-- <a-entity position="-0.1 0.8 -0.5" rotation="0 90 0">
         <a-entity slider-events id="aslider-down" ui-slider="color: red; min: 1; max: 2.5; value: 1.2" rotation="180 0 90"></a-entity>
         <a-entity slider-text="slider: #aslider-down" position="0 0 0.6" rotation="0 -90 0" text="value: 1.2;"></a-entity>
         <a-entity position="0 0.1 0.6" rotation="0 -90 0" text="value: aValue;"></a-entity>
-      </a-entity>
+      </a-entity> -->
+
+      <a-entity my-slider="min: 1; max: 2.5; title: a value" id="aslider-down" position="0 1 0"></a-entity>
 
       <!-- <a-entity position="0 0.6 0">
       <a-entity position="-0.9 0.6 0.4" rotation="0 90 0" text="value: activate PI;align: center"></a-entity>
@@ -85,7 +87,7 @@
       </a-entity>
 
       <a-entity light="type: spot; color: #ffffff; intensity: 0.5; castShadow: true" position="0 5 0" rotation="-90 0 0"></a-entity>
-      <a-entity light="type: ambient; color: #ffffff; intensity: 0.4;" position="0 3 0"></a-entity>
+      <a-entity light="type: ambient; color: #ffffff; intensity: 0.7;" position="0 3 0"></a-entity>
 
     <!-- <a-log rotation="0 45 0" position="-2 0 -1"></a-log> -->
 

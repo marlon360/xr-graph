@@ -20,6 +20,17 @@ module.exports = {
             outputPath: "imgs"
           }
         }
+      },
+      {
+        test: /\.glb$/,
+        use: {
+          // The file-loader resolves import/require() on a file into a url and emits the file into the output directory.
+          loader: "file-loader",
+          options: {
+            name: "[name].[hash].[ext]",
+            outputPath: "models"
+          }
+        }
       }
     ]
   }
