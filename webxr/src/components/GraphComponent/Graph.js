@@ -6,6 +6,21 @@ const createTubeGeometry = require('./createTubeGeometry');
 
 AFRAME.registerComponent('graph', {
     schema: {
+        a: {
+            default: 1
+        },
+        uMax: {
+            default: 1
+        },
+        uMin: {
+            default: 1
+        },
+        vMax: {
+            default: 1
+        },
+        vMin: {
+            default: 1
+        },
         segmentsMultiplier: {
             default: 2
         },

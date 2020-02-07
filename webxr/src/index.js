@@ -5,6 +5,8 @@ require('aframe-log-component');
 require('aframe-plot-component');
 require('aframe-ui-widgets');
 
+require('aframe-fps-counter-component');
+
 require('./components/aframe-aabb-collider');
 require('./components/aframe-parent-constraint');
 require('./components/helper');
@@ -153,7 +155,7 @@ AFRAME.registerComponent('my-slider', {
           value = this.data.max;
         }
     
-
+        this.value = value;
     
         lever.position.x = this.valueToLeverPosition(value);
         this.setTextGeometry(value.toFixed(2))

@@ -89,12 +89,15 @@
       <a-entity light="type: spot; color: #ffffff; intensity: 0.5; castShadow: true" position="0 5 0" rotation="-90 0 0"></a-entity>
       <a-entity light="type: ambient; color: #ffffff; intensity: 0.7;" position="0 3 0"></a-entity>
 
+      <a-entity position="0 1.2 -0.3" fps-counter></a-entity>
+
     <!-- <a-log rotation="0 45 0" position="-2 0 -1"></a-log> -->
 
     <!-- <a-box middle="otherhand: #rbox" position="-2 1.5 0"></a-box>
     <a-box id="rbox" position="2 1 0"></a-box> -->
 
-    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="lhand" hand-controls="hand: left; handModelStyle: highPoly" mixin="touch"></a-entity>
+    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="lhand" hand-controls="hand: left; handModelStyle: highPoly" mixin="touch">
+    </a-entity>
     <a-entity interaction-hands aabb-collider="objects: .grabbable" id="rhand" hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"></a-entity>
 
     <a-entity position="0 1.1 0.5" camera look-controls wasd-controls></a-entity>
@@ -180,7 +183,7 @@
     var value = evt.detail.value;
     value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
-      xMax: value
+      uMax: value
     })
   })
 
@@ -188,21 +191,21 @@
     var value = evt.detail.value;
     value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
-      xMin: value
+      uMin: value
     })
   })
   zsliderup.addEventListener('change', (evt) => {
     var value = evt.detail.value;
     value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
-      yMax: value
+      vMax: value
     })
   })
   zsliderdown.addEventListener('change', (evt) => {
     var value = evt.detail.value;
     value = Math.floor(value * 10) / 10;
     plot.setAttribute("graph", {
-      yMin: value
+      vMin: value
     })
   })
 

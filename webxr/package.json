@@ -33,6 +33,7 @@
     "aframe-environment-component": "^2.0.0",
     "aframe-event-set-component": "^5.0.0",
     "aframe-extras": "^6.0.1",
+    "aframe-fps-counter-component": "^1.0.1",
     "aframe-log-component": "^1.0.7",
     "aframe-physics-extras": "^0.1.3",
     "aframe-physics-system": "^4.0.1",
