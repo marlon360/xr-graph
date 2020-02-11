@@ -32,7 +32,7 @@
       <!-- <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder> -->
 
 
-        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: true; showBoundingLabels: true; showWireframe: false; function: f(u,v) = [u, cos(v) + sin(u), v]"></a-entity >
+        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: true; showBoundingLabels: true; showWireframe: false; function: f(u,v) = [u, a * cos(v) + sin(u), v]"></a-entity >
 
       <a-entity position="-0.6 1.4 -0.2" rotation="0 150 0">
         <a-entity slider-events id="xslider-up" ui-slider="color: red; min: 0; max: 10; value: 6" rotation="0 0 90"></a-entity>
