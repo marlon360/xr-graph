@@ -29,7 +29,6 @@ AFRAME.registerComponent('my-slider', {
       multiple: true,
     
       init: function () {
-        this.box = document.getElementById("box").object3D;
         var loader = new THREE.GLTFLoader();
 
         var leverMaterial = new THREE.MeshBasicMaterial({color: this.data.color });
