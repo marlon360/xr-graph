@@ -5,7 +5,7 @@
 </head>
 
 <body>
-  <a-scene stats shadow="type: pcfsoft" physics="driver: local; debug: true; gravity: 0; friction: 0; restitution: 0;" renderer="antialias: true" cursor="rayOrigin: mouse" raycaster="objects: [cube]">
+  <a-scene stats shadow="type: pcfsoft"  cursor="rayOrigin:mouse" physics="driver: local; debug: true; gravity: 0; friction: 0; restitution: 0;" renderer="antialias: true" cursor="rayOrigin: mouse" raycaster="objects: [my-slider]">
     <a-assets>
       <a-mixin id="touch" class="hands" ></a-mixin>
     </a-assets>
@@ -32,7 +32,7 @@
       <!-- <a-cylinder position="0 -1 0" color="#bbb" height="2" radius="4.5" shadow></a-cylinder> -->
 
 
-        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; segmentsMultiplier: 2; showGrid: false; showGridLabels: true; showWireframe: true; function: f(u,v) = [2 * u, 0.1 * a * u^2 * cos(v), 0.1 * u^2 * sin(v)]"></a-entity >
+        <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: true; showBoundingLabels: true; showWireframe: false; function: f(u,v) = [u, cos(v) + sin(u), v]"></a-entity >
 
       <a-entity position="-0.6 1.4 -0.2" rotation="0 150 0">
         <a-entity slider-events id="xslider-up" ui-slider="color: red; min: 0; max: 10; value: 6" rotation="0 0 90"></a-entity>
@@ -89,22 +89,22 @@
       <a-entity light="type: spot; color: #ffffff; intensity: 0.5; castShadow: true" position="0 5 0" rotation="-90 0 0"></a-entity>
       <a-entity light="type: ambient; color: #ffffff; intensity: 0.7;" position="0 3 0"></a-entity>
 
-      <a-entity position="0 1.2 -0.3" fps-counter></a-entity>
+      <a-entity position="0 1.2 -0.3" fps-counter="for90fps: false"></a-entity>
 
     <!-- <a-log rotation="0 45 0" position="-2 0 -1"></a-log> -->
 
     <!-- <a-box middle="otherhand: #rbox" position="-2 1.5 0"></a-box>
     <a-box id="rbox" position="2 1 0"></a-box> -->
 
-    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="lhand" hand-controls="hand: left; handModelStyle: highPoly" mixin="touch">
-    </a-entity>
+    <a-entity interaction-hands aabb-collider="objects: .grabbable" id="lhand" hand-controls="hand: left; handModelStyle: highPoly" mixin="touch"></a-entity>
     <a-entity interaction-hands aabb-collider="objects: .grabbable" id="rhand" hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"></a-entity>
 
-    <a-entity position="0 1.1 0.5" camera look-controls wasd-controls></a-entity>
+    <a-entity position="0 1.1 0.5" camera look-controls  wasd-controls></a-entity>
   </a-scene>
 </body>
 <script>
-  const plot = document.querySelector("#plot");
+  const plot = document.querySelector("#plot");  
+  const graph = plot.components["graph"];
   const xsliderup = document.querySelector("#xslider-up");
   const xsliderdown = document.querySelector("#xslider-down");
   const zsliderup = document.querySelector("#zslider-up");
@@ -281,7 +281,7 @@
 
   labelToggle.addEventListener('change', (evt) => {
     plot.setAttribute("graph", {
-      showGridLabels: evt.detail.value == 1
+      showBoundingLabels: evt.detail.value == 1
     })
   })
 
@@ -299,8 +299,7 @@
   //     a: a
   //   })
   //   a += 0.001;
-  // }, 10);
-  
+  // }, 1);
 
 </script>
 </html>

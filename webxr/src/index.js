@@ -12,9 +12,7 @@ require('./components/aframe-parent-constraint');
 require('./components/helper');
 require('./components/GraphComponent/Graph');
 
-import SpriteText from 'three-spritetext';
 import { MeshText2D, textAlign } from 'three-text2d'
-import { Group } from 'three';
 
 AFRAME.registerComponent('my-slider', {
     schema: {
@@ -31,6 +29,7 @@ AFRAME.registerComponent('my-slider', {
       multiple: true,
     
       init: function () {
+        this.box = document.getElementById("box").object3D;
         var loader = new THREE.GLTFLoader();
 
         var leverMaterial = new THREE.MeshBasicMaterial({color: this.data.color });
@@ -58,7 +57,6 @@ AFRAME.registerComponent('my-slider', {
 
         const knobURL = require('./models/knob.glb').default;
         loader.load( knobURL,(gltf) => {
-            console.log("loaded")
             var scene = gltf.scene;
             this.knob = scene.children[0];
             this.knob.scale.set(0.2,0.2, 0.2)
@@ -175,8 +173,8 @@ AFRAME.registerComponent('my-slider', {
         let sliderMin = -1 * sliderRange / 2;
 
         return (((position - sliderMin) * valueRange) / sliderRange) + this.data.min
-      },
-      tick: function() {
+    },
+    tick: function() {
         if (this.grabbed) {
           var hand = this.grabbed;
           var lever = this.lever;
