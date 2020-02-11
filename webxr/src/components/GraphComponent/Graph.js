@@ -311,9 +311,9 @@ AFRAME.registerComponent('graph', {
     },
     updateAxesLabels: function () {
 
-        const scale = 0.03;
+        const scale = 0.02;
         const space = 0.2;
-        const offset = 1.0;
+        const offset = 0.6;
         
         if (this.xMinText == null) {            
             this.xMinText = new SpriteText2D("", {fillStyle: "#fb2841"});
