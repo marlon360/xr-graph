@@ -1,5 +1,3 @@
-import { DoubleSide, Color, ShaderMaterial } from 'three';
-
 export class MathGraphMaterial {
 
     constructor(expression) {
@@ -7,8 +5,8 @@ export class MathGraphMaterial {
         this.expression = expression;
 
         this.uniforms = {
-            colorB: {type: 'vec3', value: new Color(0xACB6E5)},
-            colorA: {type: 'vec3', value: new Color(0x74ebd5)},
+            colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
+            colorA: {type: 'vec3', value: new THREE.Color(0x74ebd5)},
             yBoundaryMin: {type: 'float', value: -3.2},
             yBoundaryMax: {type: 'float', value: 3.2},
             wireframeActive: { type: "bool", value: true}
@@ -25,9 +23,9 @@ export class MathGraphMaterial {
 
         this.vertexIdentifier = ["x", "y", "z"];
 
-        this.material = new ShaderMaterial({
+        this.material = new THREE.ShaderMaterial({
             uniforms: this.uniforms,
-            side: DoubleSide,
+            side: THREE.DoubleSide,
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader(),
             transparent: true

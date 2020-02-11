@@ -1,5 +1,3 @@
-import { DoubleSide, Color, ShaderMaterial } from 'three';
-
 export class MathCurveMaterial {
 
     constructor(expression, subdivisions) {
@@ -11,6 +9,8 @@ export class MathCurveMaterial {
             time: { type: 'float', value: 0 },
             radialSegments: { type: 'float', value: 8 },
             subdivisions: { type: 'float', value: subdivisions },
+            yBoundaryMin: {type: 'float', value: -3.2},
+            yBoundaryMax: {type: 'float', value: 3.2},
           }
 
         this.expression.getParameters().forEach(param => {
@@ -24,9 +24,9 @@ export class MathCurveMaterial {
 
         this.vertexIdentifier = ["x", "y", "z"];
 
-        this.material = new ShaderMaterial({
+        this.material = new THREE.ShaderMaterial({
             uniforms: this.uniforms,
-            side: DoubleSide,
+            side: THREE.DoubleSide,
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader()
         })
