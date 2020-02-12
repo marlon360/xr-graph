@@ -4,6 +4,28 @@ import { MathGraphMaterial } from './MathGraphShader';
 import { MathCurveMaterial } from './MathCurveShader';
 const createTubeGeometry = require('./createTubeGeometry');
 
+function debounce(func, wait, immediate) {
+    var timeout;
+  
+    return function executedFunction() {
+      var context = this;
+      var args = arguments;
+          
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+  
+      var callNow = immediate && !timeout;
+      
+      clearTimeout(timeout);
+  
+      timeout = setTimeout(later, wait);
+      
+      if (callNow) func.apply(context, args);
+    };
+  };
+
 AFRAME.registerComponent('graph', {
     schema: {
         segmentsMultiplier: {
@@ -26,9 +48,24 @@ AFRAME.registerComponent('graph', {
         },
         function: {
             default: "f(u, v) = [1.5 * u, 0.1 * u^2 * cos(v), 0.1 * u^2 * sin(v)]"
+        },
+        debounceTimeForBoundaryCalculation: {
+            default: 0
         }
     },
     init: function () {
+
+        this.updateBoundariesDebounced = debounce(() => {
+            this.updateBoundaries();
+            if (this.yMax != null) {
+                this.graph.material.uniforms.yBoundaryMax.value = this.yMax;
+            }
+            if (this.yMin != null) {
+                this.graph.material.uniforms.yBoundaryMin.value = this.yMin;
+            }
+            this.updateAxesLabels();
+            this.boundariesNeedUpdate = false;
+        }, this.data.debounceTimeForBoundaryCalculation)
 
         this.boundariesNeedUpdate = false;
 
@@ -126,17 +163,9 @@ AFRAME.registerComponent('graph', {
         });
 
         if (this.boundariesNeedUpdate) {
-            this.updateBoundaries();
-            if (this.yMax != null) {
-                this.graph.material.uniforms.yBoundaryMax.value = this.yMax;
-            }
-            if (this.yMin != null) {
-                this.graph.material.uniforms.yBoundaryMin.value = this.yMin;
-            }
-            this.updateAxesLabels();
+            this.updateBoundariesDebounced();
         }
-        this.boundariesNeedUpdate = false;
-
+        
     },
     updateSchema: function (newData) {
         if (newData.function !== this.oldData.function) {
