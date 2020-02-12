@@ -14,7 +14,8 @@
     <a-entity environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 1; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
 
       <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: false; showBoundingLabels: true; showWireframe: false; function: f(u,v) = [u, a * cos(v) + sin(u), v]"></a-entity >
-
+      <a-entity data-aabb-collider-dynamic="true" class="grabbable" position="0 0.8 -0.2" rotation="-45 0 0" graph-ui="graph: #plot"></a-entity>
+      
       <a-entity position="-0.6 1.4 -0.2" rotation="0 150 0">
         <a-entity slider-events id="xslider-up" ui-slider="color: red; min: 0; max: 10; value: 6" rotation="0 0 90"></a-entity>
         <a-entity slider-text="slider: #xslider-up" position="0 0 0.6" rotation="0 -90 0" text="value: 6;"></a-entity>
