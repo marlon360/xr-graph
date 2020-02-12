@@ -70,7 +70,7 @@ AFRAME.registerComponent('graph', {
         this.boundariesNeedUpdate = false;
 
         this.expression = new MathExpression(this.data.function);
-        this.boundingBox = this.createColliderBox(this.expression, 20);
+        this.updateBoundingBox(this.expression, 20);
         this.graph = this.createGraph(this.expression);
         
         this.el.object3D.colliderBox = new THREE.Box3();
@@ -207,7 +207,7 @@ AFRAME.registerComponent('graph', {
         
         return parameterExtrema;
     },
-    createColliderBox: function (expression, segments = 100) {
+    updateBoundingBox: function (expression, segments = 100) {
 
         const extrema = this.getParameterExtrema(expression);
         const parameters = expression.getParameters();        
@@ -260,10 +260,13 @@ AFRAME.registerComponent('graph', {
         } else {
             func = JSFunc;
         }
+        let funcResult;
         for (let i = 0; i < explicitFunctionParameter.length; i++) {
-            xValue = func(...explicitFunctionParameter[i])[0];
-            yValue = func(...explicitFunctionParameter[i])[1];
-            zValue = func(...explicitFunctionParameter[i])[2];
+            funcResult = func(...explicitFunctionParameter[i]);
+            xValue = funcResult[0];
+            yValue = funcResult[1];
+            zValue = funcResult[2];
+            
 
             if (this.xMin == null || xValue < this.xMin) {
                 this.xMin = xValue
@@ -291,7 +294,12 @@ AFRAME.registerComponent('graph', {
         this.yRange = this.yMax - this.yMin;
         this.zRange = this.zMax - this.zMin;
 
-        return new THREE.Box3(minVec, maxVec)
+        if (this.boundingBox != null) {
+            this.boundingBox.min = minVec;
+            this.boundingBox.max = maxVec;
+        } else {
+            this.boundingBox = new THREE.Box3(minVec, maxVec)
+        }
     },
     tick: function () {
         if (this.boundingBox != null) {
@@ -299,7 +307,7 @@ AFRAME.registerComponent('graph', {
         }
     },
     updateBoundaries: function() {
-        this.boundingBox = this.createColliderBox(this.expression, 20);
+        this.updateBoundingBox(this.expression, 20);
         this.boundingBoxVisual.box = this.boundingBox;
         if (this.graph != null) {
             if (this.yMax != null) {
