@@ -1,3 +1,4 @@
+import { MeshText2D, textAlign } from 'three-text2d'
 
 AFRAME.registerComponent('graph-ui', {
     schema: {
@@ -21,7 +22,7 @@ AFRAME.registerComponent('graph-ui', {
 
         this.planeGeo = new THREE.PlaneBufferGeometry(this.parameterInfos[0].range, this.parameterInfos[1].range, 1, 1);
 
-        const transparentWireMaterial = new THREE.MeshBasicMaterial();
+        const transparentWireMaterial = new THREE.MeshBasicMaterial({side: THREE.DoubleSide});
         if (this.alphaTexture == null) {
             const alphaMapURL = require('../../images/square_inv.png').default;
             var loader = new THREE.TextureLoader();
@@ -37,14 +38,35 @@ AFRAME.registerComponent('graph-ui', {
         transparentWireMaterial.color.setHex(0xFFFFFF);           
 
         this.planeMesh = new THREE.Mesh(this.planeGeo, transparentWireMaterial);
+
+        this.uMinText = new MeshText2D("-6.3", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.uMinText.scale.set(0.01,0.01, 0.01);
+        this.uMinText.position.z = 0.02;
+
+        this.uMaxText = new MeshText2D("6.3", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.uMaxText.scale.set(0.01,0.01, 0.01);
+        this.uMaxText.position.z = 0.02;
+
+        this.vMinText = new MeshText2D("0", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.vMinText.scale.set(0.01,0.01, 0.01);
+        this.vMinText.position.z = 0.02;
+
+        this.vMaxText = new MeshText2D("6.3", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.vMaxText.scale.set(0.01,0.01, 0.01);
+        this.vMaxText.position.z = 0.02;
+
+        this.updateTextPosition();
         
-        const knobGeo = new THREE.BoxBufferGeometry(1, 1, 1);
-        this.knobMaterial = new THREE.MeshLambertMaterial({color: 0xFFFFFF });
+        const knobGeo = new THREE.ConeBufferGeometry(0.4, 1, 24);
+        this.knobMaterial = new THREE.MeshLambertMaterial({color: 0xFFFFFF});
         this.knobGrabbedMaterial = new THREE.MeshLambertMaterial({color: 0x7cc7ed, emissive:0x46b1ff });
         this.rightKnobMesh = new THREE.Mesh(knobGeo, this.knobMaterial);
+        this.rightKnobMesh.rotation.z = -Math.PI / 2
         this.leftKnobMesh = new THREE.Mesh(knobGeo, this.knobMaterial);
+        this.leftKnobMesh.rotation.z = Math.PI / 2
         this.topKnobMesh = new THREE.Mesh(knobGeo, this.knobMaterial);
         this.bottomKnobMesh = new THREE.Mesh(knobGeo, this.knobMaterial);
+        this.bottomKnobMesh.rotation.z = Math.PI
 
         this.rightKnobStartPosition = this.planeGeo.parameters.width / 2 + 1;
         this.leftKnobStartPosition = -this.planeGeo.parameters.width / 2 - 1;
@@ -75,6 +97,11 @@ AFRAME.registerComponent('graph-ui', {
         this.group = new THREE.Group();
         this.group.add(this.planeMesh);
 
+        this.group.add(this.uMinText);
+        this.group.add(this.uMaxText);
+        this.group.add(this.vMinText);
+        this.group.add(this.vMaxText);
+
         this.group.add(this.rightKnobMesh);
         this.group.add(this.leftKnobMesh);
         this.group.add(this.topKnobMesh);
@@ -85,6 +112,19 @@ AFRAME.registerComponent('graph-ui', {
         this.el.setObject3D('mesh', this.group)
         
         this.grabbedKnob = null;        
+    },
+    updateTextPosition: function() {
+        this.uMinText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 + 0.5;
+        this.uMinText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 - 0.3;
+
+        this.uMaxText.position.x = this.planeMesh.position.x + this.planeGeo.parameters.width * this.planeMesh.scale.x / 2;
+        this.uMaxText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 - 0.3;
+
+        this.vMinText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 - 0.5;
+        this.vMinText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 + 0.5;
+
+        this.vMaxText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 - 0.5;
+        this.vMaxText.position.y = this.planeMesh.position.y + this.planeGeo.parameters.height * this.planeMesh.scale.y / 2;
     },
     play: function () {
         this.grabbed = false;
@@ -211,6 +251,13 @@ AFRAME.registerComponent('graph-ui', {
             this.alphaTexture.repeat.set(newURange, newVRange);            
             this.alphaTexture.offset.x = newUmin % 1;
             this.alphaTexture.offset.y = newVmin % 1;
+
+            this.vMinText.text = newVmin.toFixed(2);
+            this.vMaxText.text = newVmax.toFixed(2);
+            this.uMinText.text = newUmin.toFixed(2);
+            this.uMaxText.text = newUmax.toFixed(2);
+
+            this.updateTextPosition()
             
         }    
         
