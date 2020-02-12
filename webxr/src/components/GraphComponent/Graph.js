@@ -48,7 +48,8 @@ AFRAME.registerComponent('graph', {
         this.updateAxesLabels();
         this.root.add(this.labels);
 
-        this.root.add(this.makeAxes())
+        // weird fix
+        new THREE.BufferGeometry();
 
         this.root.scale.set(0.1, 0.1, 0.1)
 
