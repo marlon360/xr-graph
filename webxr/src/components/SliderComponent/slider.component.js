@@ -10,7 +10,8 @@ AFRAME.registerComponent('my-slider', {
         max: { type: 'number', default: -4 },
         value: { type: 'number', default: -5 },
         innerSize: { type: 'number', default: 0.8 },
-        title: { type: 'string', default: "My Slider" }
+        title: { type: 'string', default: "My Slider" },
+        precision: { type: 'number', default: 2 }
       },
     
       multiple: true,
@@ -142,7 +143,7 @@ AFRAME.registerComponent('my-slider', {
         this.value = value;
     
         lever.position.x = this.valueToLeverPosition(value);
-        this.setTextGeometry(value.toFixed(2))
+        this.setTextGeometry(value.toFixed(this.data.precision))
       },
       valueToLeverPosition: function(value) {
         var sliderRange = this.data.size * this.data.innerSize;
@@ -179,10 +180,10 @@ AFRAME.registerComponent('my-slider', {
             }    
             var value = this.leverPositionToValue(lever.position.x);
             
-            if (this.value !== value) {
+            if (Math.abs(this.value - value) >= Math.pow(10, -this.data.precision)) {
                 this.el.emit('change', { value: value });
                 this.value = value;
-                this.setTextGeometry(value.toFixed(2))
+                this.setTextGeometry(value.toFixed(this.data.precision))
             }
         }
       },
