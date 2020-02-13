@@ -79,11 +79,11 @@ AFRAME.registerComponent('graph-ui', {
 
         this.planeMesh = new THREE.Mesh(this.planeGeo, [transparentWireMaterial, transparentWireMaterial2]);
 
-        this.uMinText = new MeshText2D(this.parameterInfos[0].min, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.uMinText = new MeshText2D(this.parameterInfos[0].min.toFixed(2), { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.uMinText.scale.set(0.01,0.01, 0.01);
         this.uMinText.position.z = 0.02;
 
-        this.uMaxText = new MeshText2D(this.parameterInfos[0].max, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.uMaxText = new MeshText2D(this.parameterInfos[0].max.toFixed(2), { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.uMaxText.scale.set(0.01,0.01, 0.01);
         this.uMaxText.position.z = 0.02;
 
@@ -93,11 +93,11 @@ AFRAME.registerComponent('graph-ui', {
 
         if (this.parameterInfos[1] != null) {
 
-            this.vMinText = new MeshText2D(this.parameterInfos[1].min, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+            this.vMinText = new MeshText2D(this.parameterInfos[1].min.toFixed(2), { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
             this.vMinText.scale.set(0.01,0.01, 0.01);
             this.vMinText.position.z = 0.02;
 
-            this.vMaxText = new MeshText2D(this.parameterInfos[1].max, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+            this.vMaxText = new MeshText2D(this.parameterInfos[1].max.toFixed(2), { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
             this.vMaxText.scale.set(0.01,0.01, 0.01);
             this.vMaxText.position.z = 0.02;
 
