@@ -144,19 +144,28 @@ AFRAME.registerComponent('graph', {
                 this.boundariesNeedUpdate = true;
             }
         }
-        this.expression.getVariables().forEach(param => {
-            if (this.data[param] != oldData[param]) {
-                if (this.data[param] != null) {
-                    this.graph.material.uniforms[param].value = this.data[param]
-                    this.boundariesNeedUpdate = true;
-               }
+        for (let [variable, value] of Object.entries(this.getVariables())) {
+            if (this.graph.material.uniforms[variable].value != value) {
+                this.graph.material.uniforms[variable].value = value
+                this.boundariesNeedUpdate = true;
             }
-        });
+        };
 
         if (this.boundariesNeedUpdate) {
             this.updateBoundariesDebounced();
         }
         
+    },
+    getVariables: function() {
+        let variables = {};
+        this.expression.getVariables().forEach(variable => {
+            let value = 1;
+            if (this.data[variable] != null) {
+                value = this.data[variable];
+            }
+            variables[variable] = value;
+        });
+        return variables;
     },
     updateSchema: function (newData) {
         if (newData.function !== this.oldData.function) {
