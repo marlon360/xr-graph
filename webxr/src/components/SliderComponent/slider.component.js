@@ -63,13 +63,13 @@ AFRAME.registerComponent('my-slider', {
         titleText.rotateY(-Math.PI / 2);
         this.lever.add(titleText)
         
-        const minText = new MeshText2D(this.data.min, { align: textAlign.right,  font: '28px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        const minText = new MeshText2D(this.data.min.toFixed(this.data.precision), { align: textAlign.right,  font: '28px Arial', fillStyle: '#FFFFFF' , antialias: true });
         minText.scale.set(0.001,0.001,0.001);
         minText.position.y = -0.02;
         minText.position.x = this.valueToLeverPosition(this.data.min);
         chassis.add(minText)
         
-        const maxText = new MeshText2D(this.data.max, { align: textAlign.right,  font: '28px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        const maxText = new MeshText2D(this.data.max.toFixed(this.data.precision), { align: textAlign.right,  font: '28px Arial', fillStyle: '#FFFFFF' , antialias: true });
         maxText.scale.set(0.001,0.001,0.001);
         maxText.position.y = -0.02;
         maxText.position.x = this.valueToLeverPosition(this.data.max);
@@ -118,9 +118,16 @@ AFRAME.registerComponent('my-slider', {
         var collision = handBB.intersectsBox(leverBB);
     
         if (collision) {
-          this.grabbed = hand;
-          this.grabbed.visible = false;
-          this.knob.material = this.knobGrabbedMaterial;
+          let handWorld = new THREE.Vector3();
+          hand.getWorldPosition(handWorld);
+          let knobWorld = new THREE.Vector3();;
+          lever.getWorldPosition(knobWorld);
+          let distance = handWorld.distanceTo(knobWorld);
+          if (distance < 0.1) {
+            this.grabbed = hand;
+            this.grabbed.visible = false;
+            this.knob.material = this.knobGrabbedMaterial;
+          }
         };
       },
     
