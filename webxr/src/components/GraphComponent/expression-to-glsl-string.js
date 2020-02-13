@@ -39,7 +39,7 @@ export default function expressionToGlslString(tokens) {
       n1 = nstack.pop();
       f = item.value;
       if (f === '^') {
-        nstack.push('pow(' + n1 + ', ' + n2 + ')');
+        nstack.push(Array.apply(null, Array(parseInt(n2))).map(() => n1).join("*"));
       } else if (f === 'and') {
         nstack.push('(!!' + n1 + ' && !!' + n2 + ')');
       } else if (f === 'or') {
