@@ -79,7 +79,7 @@ AFRAME.registerComponent('graph-ui', {
 
         this.planeMesh = new THREE.Mesh(this.planeGeo, [transparentWireMaterial, transparentWireMaterial2]);
 
-        this.title = new MeshText2D(`${this.parameters.join("")} paramter`, { align: textAlign.left,  font: '80px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.title = new MeshText2D(`${this.parameters.join("")} parameter`, { align: textAlign.left,  font: '80px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.title.scale.set(0.01,0.01, 0.01);
         this.title.position.z = 0.02;
         this.group.add(this.title);
