@@ -13,12 +13,11 @@
     <!-- <a-sky color="#444"></a-sky> -->
     <a-entity environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 1; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
 
-      <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: false; showBoundingLabels: true; showWireframe: false; function: f(u,v) = [u, a * cos(v) + sin(u), v]"></a-entity >
+      <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: false; showBoundingLabels: true; showWireframe: false; function: f(u,v) = [u, a * cos(v) + b * sin(u), v]"></a-entity >
       
       <a-entity data-aabb-collider-dynamic="true" class="grabbable" position="-0.6 1 0" rotation="0 70 0" graph-parameter-ui="graph: #plot"></a-entity>
+      <a-entity data-aabb-collider-dynamic="true" class="grabbable" position="0.6 1 0" rotation="0 -70 0" graph-variable-ui="graph: #plot"></a-entity>
       
-
-      <a-entity my-slider="min: 1; max: 2.5; title: a value" id="aslider-down" position="0.5 1 0" rotation="0 -60 0"></a-entity>
 
 
       <a-entity position="0.9 0.6 0">
@@ -55,7 +54,6 @@
 <script>
   const plot = document.querySelector("#plot");  
   const graph = plot.components["graph"];
-  const asliderdown = document.querySelector("#aslider-down");
 
   function findGetParameter(parameterName) {
     var result = null,
@@ -114,14 +112,6 @@
       zMax: decodeURIComponent(zMax)
     });
   }
-
-  asliderdown.addEventListener('change', (evt) => {
-    var value = evt.detail.value;
-    plot.setAttribute("graph", {
-      a: value
-    })
-  })
-
 
 const boundingboxToggle = document.querySelector("#boundingbox-toggle");
 
