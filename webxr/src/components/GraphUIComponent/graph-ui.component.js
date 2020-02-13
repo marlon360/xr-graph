@@ -79,6 +79,11 @@ AFRAME.registerComponent('graph-ui', {
 
         this.planeMesh = new THREE.Mesh(this.planeGeo, [transparentWireMaterial, transparentWireMaterial2]);
 
+        this.title = new MeshText2D(`${this.parameters.join("")} paramter`, { align: textAlign.left,  font: '80px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.title.scale.set(0.01,0.01, 0.01);
+        this.title.position.z = 0.02;
+        this.group.add(this.title);
+
         this.uMinText = new MeshText2D(this.parameterInfos[0].min.toFixed(2), { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.uMinText.scale.set(0.01,0.01, 0.01);
         this.uMinText.position.z = 0.02;
@@ -87,6 +92,7 @@ AFRAME.registerComponent('graph-ui', {
         this.uMaxText.scale.set(0.01,0.01, 0.01);
         this.uMaxText.position.z = 0.02;
 
+        
         this.group.add(this.uMinText);
         this.group.add(this.uMaxText);
 
@@ -160,6 +166,10 @@ AFRAME.registerComponent('graph-ui', {
         this.grabbedKnob = null;        
     },
     updateTextPosition: function() {
+
+        this.title.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 - 0.5;
+        this.title.position.y = this.planeMesh.position.y + this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 + 2.5;
+
         this.uMinText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 + 0.5 * 1 / this.el.object3D.scale.x;
         this.uMinText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 - 0.3 * 1 / this.el.object3D.scale.y;
 
