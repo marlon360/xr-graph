@@ -134,25 +134,16 @@ AFRAME.registerComponent('graph', {
             if (this.graph.material.uniforms.wireframeActive != null )
             this.graph.material.uniforms.wireframeActive.value = this.data.showWireframe;
         }
-
-        this.expression.getParameters().forEach(param => {
-            if (this.data[param+"Min"] != oldData[param+"Min"]) {
-                let min = -6;
-                if (this.data[param+"Min"] != null) {
-                    min = this.data[param+"Min"]
-                }
-                this.graph.material.uniforms[param+"Min"].value = min;
+        for (let [param, info] of Object.entries(this.getParameterExtrema())) {
+            if (this.graph.material.uniforms[param+"Min"].value != info.min) {
+                this.graph.material.uniforms[param+"Min"].value = info.min;
                 this.boundariesNeedUpdate = true;
             }
-            if (this.data[param+"Max"] != oldData[param+"Max"]) {
-                let max = 6;
-                if (this.data[param+"Max"] != null) {
-                    max = this.data[param+"Max"]
-                }
-                this.graph.material.uniforms[param+"Max"].value = max;
+            if (this.graph.material.uniforms[param+"Max"].value != info.max) {
+                this.graph.material.uniforms[param+"Max"].value = info.max;
                 this.boundariesNeedUpdate = true;
             }
-        });
+        }
         this.expression.getVariables().forEach(param => {
             if (this.data[param] != oldData[param]) {
                 if (this.data[param] != null) {
@@ -187,9 +178,9 @@ AFRAME.registerComponent('graph', {
           this.extendSchema(schema);
         }
     },
-    getParameterExtrema: function (expression) {
+    getParameterExtrema: function () {
         let parameterExtrema = {};
-        expression.getParameters().forEach(param => {
+        this.expression.getParameters().forEach(param => {
             let min = -6;
             let max = 6;
             if (this.data[param+"Min"] != null) {
@@ -209,7 +200,7 @@ AFRAME.registerComponent('graph', {
     },
     updateBoundingBox: function (expression, segments = 100) {
 
-        const extrema = this.getParameterExtrema(expression);
+        const extrema = this.getParameterExtrema();
         const parameters = expression.getParameters();        
 
         let explicitFunctionParameter = [];

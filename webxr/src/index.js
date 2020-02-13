@@ -12,6 +12,7 @@ require('./components/aframe-parent-constraint');
 require('./components/helper');
 require('./components/GraphComponent/Graph');
 require('./components/SliderComponent/slider.component');
+require('./components/GraphUIComponent/graph-ui.component');
 
 AFRAME.registerComponent('interaction-hands', {
     init: function () {
@@ -36,8 +37,8 @@ AFRAME.registerComponent('interaction-hands', {
     },
     registerListeners: function () {
         this.el.addEventListener('hitstart', this.onHit)
-        this.el.addEventListener('triggerdown', this.onGrab)
-        this.el.addEventListener('triggerup', this.onGrabEnd)
+        this.el.addEventListener('gripdown', this.onGrab)
+        this.el.addEventListener('gripup', this.onGrabEnd)
         this.el.addEventListener('hitend', this.onHitEnd)
     },
     onGrab: function () {
