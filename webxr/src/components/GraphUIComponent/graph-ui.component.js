@@ -21,6 +21,9 @@ AFRAME.registerComponent('graph-ui', {
         this.parameters = Object.keys(this.graph.getParameterExtrema());
 
         this.planeGeo = new THREE.PlaneBufferGeometry(this.parameterInfos[0].range, this.parameterInfos[1].range, 1, 1);
+        this.planeGeo.clearGroups();
+        this.planeGeo.addGroup( 0, Infinity, 0 );
+        this.planeGeo.addGroup( 0, Infinity, 1 );
 
         const transparentWireMaterial = new THREE.MeshBasicMaterial({side: THREE.DoubleSide});
         if (this.alphaTexture == null) {
@@ -36,22 +39,37 @@ AFRAME.registerComponent('graph-ui', {
         transparentWireMaterial.transparent = true;
         transparentWireMaterial.opacity = 1;
         transparentWireMaterial.color.setHex(0xFFFFFF);           
+        
+        const transparentWireMaterial2 = new THREE.MeshBasicMaterial({side: THREE.DoubleSide});
+        if (this.alphaTexture2 == null) {
+            const alphaMapURL = require('../../images/cross_inv.png').default;
+            var loader = new THREE.TextureLoader();
+            this.alphaTexture2 = loader.load(alphaMapURL);
+        }
+        this.alphaTexture2.wrapS = this.alphaTexture2.wrapT =  THREE.ClampToEdgeWrapping;
+        this.alphaTexture2.offset.x = this.parameterInfos[0].min + 0.5;
+        this.alphaTexture2.offset.y = this.parameterInfos[1].min + 0.5;
+        this.alphaTexture2.repeat.set(this.parameterInfos[0].range, this.parameterInfos[1].range);
+        transparentWireMaterial2.alphaMap = this.alphaTexture2;
+        transparentWireMaterial2.transparent = true;
+        transparentWireMaterial2.opacity = 1;
+        transparentWireMaterial2.color.setHex(0xDD0000);           
 
-        this.planeMesh = new THREE.Mesh(this.planeGeo, transparentWireMaterial);
+        this.planeMesh = new THREE.Mesh(this.planeGeo, [transparentWireMaterial, transparentWireMaterial2]);
 
-        this.uMinText = new MeshText2D("-6.3", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.uMinText = new MeshText2D(this.parameterInfos[0].min, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.uMinText.scale.set(0.01,0.01, 0.01);
         this.uMinText.position.z = 0.02;
 
-        this.uMaxText = new MeshText2D("6.3", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.uMaxText = new MeshText2D(this.parameterInfos[0].max, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.uMaxText.scale.set(0.01,0.01, 0.01);
         this.uMaxText.position.z = 0.02;
 
-        this.vMinText = new MeshText2D("0", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.vMinText = new MeshText2D(this.parameterInfos[1].min, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.vMinText.scale.set(0.01,0.01, 0.01);
         this.vMinText.position.z = 0.02;
 
-        this.vMaxText = new MeshText2D("6.3", { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        this.vMaxText = new MeshText2D(this.parameterInfos[1].max, { align: textAlign.right,  font: '50px Arial', fillStyle: '#FFFFFF' , antialias: true });
         this.vMaxText.scale.set(0.01,0.01, 0.01);
         this.vMaxText.position.z = 0.02;
 
@@ -114,16 +132,16 @@ AFRAME.registerComponent('graph-ui', {
         this.grabbedKnob = null;        
     },
     updateTextPosition: function() {
-        this.uMinText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 + 0.5;
-        this.uMinText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 - 0.3;
+        this.uMinText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 + 0.5 * 1 / this.el.object3D.scale.x;
+        this.uMinText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 - 0.3 * 1 / this.el.object3D.scale.y;
 
         this.uMaxText.position.x = this.planeMesh.position.x + this.planeGeo.parameters.width * this.planeMesh.scale.x / 2;
-        this.uMaxText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 - 0.3;
+        this.uMaxText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 - 0.3* 1 / this.el.object3D.scale.y;
 
-        this.vMinText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 - 0.5;
-        this.vMinText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 + 0.5;
+        this.vMinText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 - 0.5* 1 / this.el.object3D.scale.x;
+        this.vMinText.position.y = this.planeMesh.position.y - this.planeGeo.parameters.height * this.planeMesh.scale.y / 2 + 0.5* 1 / this.el.object3D.scale.y;
 
-        this.vMaxText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 - 0.5;
+        this.vMaxText.position.x = this.planeMesh.position.x - this.planeGeo.parameters.width * this.planeMesh.scale.x / 2 - 0.5* 1 / this.el.object3D.scale.x;
         this.vMaxText.position.y = this.planeMesh.position.y + this.planeGeo.parameters.height * this.planeMesh.scale.y / 2;
     },
     play: function () {
@@ -248,18 +266,39 @@ AFRAME.registerComponent('graph-ui', {
             
             this.data.graph.setAttribute('graph', attributeValues)
             
-            this.alphaTexture.repeat.set(newURange, newVRange);            
+            let xRepeat = newURange;
+            let yRepeat = newVRange;
+            if (xRepeat < 2 || yRepeat < 2) {
+                xRepeat = newURange * 4;
+                yRepeat = newVRange * 4;
+            }
+
+            this.alphaTexture.repeat.set(xRepeat, yRepeat);            
             this.alphaTexture.offset.x = newUmin % 1;
             this.alphaTexture.offset.y = newVmin % 1;
+
+            this.alphaTexture2.offset.x = newUmin + 0.5;
+            this.alphaTexture2.offset.y = newVmin  + 0.5;
+            this.alphaTexture2.repeat.set(newURange, newVRange);
 
             this.vMinText.text = newVmin.toFixed(2);
             this.vMaxText.text = newVmax.toFixed(2);
             this.uMinText.text = newUmin.toFixed(2);
             this.uMaxText.text = newUmax.toFixed(2);
-
-            this.updateTextPosition()
             
         }    
+
+        this.topKnobMesh.scale.set(Math.min(1.3 / this.el.object3D.scale.x, 1), Math.min(1.3 / this.el.object3D.scale.y, 1), Math.min(1.3 / this.el.object3D.scale.z, 1))
+        this.bottomKnobMesh.scale.set(Math.min(1.3 / this.el.object3D.scale.x, 1), Math.min(1.3 / this.el.object3D.scale.y, 1), Math.min(1.3 / this.el.object3D.scale.z, 1))
+        this.leftKnobMesh.scale.set(Math.min(1.3 / this.el.object3D.scale.x, 1), Math.min(1.3 / this.el.object3D.scale.y, 1), Math.min(1.3 / this.el.object3D.scale.z, 1))
+        this.rightKnobMesh.scale.set(Math.min(1.3 / this.el.object3D.scale.x, 1), Math.min(1.3 / this.el.object3D.scale.y, 1), Math.min(1.3 / this.el.object3D.scale.z, 1))
+
+        this.uMinText.scale.set(Math.min(1.3 / this.el.object3D.scale.x * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.y * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.z * 0.01, 0.01))
+        this.uMaxText.scale.set(Math.min(1.3 / this.el.object3D.scale.x * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.y * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.z * 0.01, 0.01))
+        this.vMinText.scale.set(Math.min(1.3 / this.el.object3D.scale.x * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.y * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.z * 0.01, 0.01))
+        this.vMaxText.scale.set(Math.min(1.3 / this.el.object3D.scale.x * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.y * 0.01, 0.01), Math.min(1.3 / this.el.object3D.scale.z * 0.01, 0.01))
+
+        this.updateTextPosition()
         
     },
     scaleRight: function(value) {
