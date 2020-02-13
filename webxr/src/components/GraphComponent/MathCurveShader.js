@@ -63,7 +63,7 @@ export class MathCurveMaterial {
         uniform float radialSegments;
         uniform float subdivisions;
 
-        ${this.expression.getParameters().map((param) => `uniform float ${param}Min;\nuniform float ${param}Max;\nfloat ${param}Range = ${param}Max - ${param}Min;\n`).join("\n")}
+        ${this.expression.getParameters().map((param) => `uniform float ${param}Min;\nuniform float ${param}Max;\n`).join("\n")}
 
         ${this.expression.getVariables().map((param) => `uniform float ${param};`).join("\n")}
         
@@ -74,42 +74,110 @@ export class MathCurveMaterial {
         varying vec3 vViewPosition;
         varying vec3 vNormal;
         
-
         vec3 sample (float t) {
           return ${this.getGLSLFunctionString()};
         }
-        
-        // ------
-        // Fast version; computes the local Frenet-Serret frame
-        // ------
-        void createTube (float t, vec2 volume, out vec3 offset, out vec3 normal) {
-          // find next sample along curve
 
-          float nextT = t + (1.0 / subdivisions);
+        vec3 getTangent (vec3 a, vec3 b) {
+            return normalize(b - a);
+        }
+
+        void rotateByAxisAngle (inout vec3 normal, vec3 axis, float angle) {
+            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
+            // assumes axis is normalized
+            float halfAngle = angle / 2.0;
+            float s = sin(halfAngle);
+            vec4 quat = vec4(axis * s, cos(halfAngle));
+            normal = normal + 2.0 * cross(quat.xyz, cross(quat.xyz, normal) + quat.w * normal);
+        }
+
         
-          // sample the curve in two places
-          vec3 current = sample(t);
-          vec3 next = sample(nextT);
-          
-          // compute the TBN matrix
-          vec3 T = normalize(next - current);
-          vec3 B = normalize(cross(T, next + current));
-          vec3 N = -normalize(cross(B, T));
-        
-          // extrude outward to create a tube
-          float tubeAngle = angle;
-          float circX = cos(tubeAngle);
-          float circY = sin(tubeAngle);
-        
-          // compute position and normal
-          normal.xyz = normalize(B * circX + N * circY);
-          offset.xyz = current + B * volume.x * circX + N * volume.y * circY;
+        void createTube (float t, vec2 volume, out vec3 outPosition, out vec3 outNormal) {
+            // Reference:
+            // https://github.com/mrdoob/three.js/blob/b07565918713771e77b8701105f2645b1e5009a7/src/extras/core/Curve.js#L268
+            float nextT = t + (1.0 / subdivisions);
+
+            // find first tangent
+            vec3 point0 = sample(0.0);
+            vec3 point1 = sample(1.0 / subdivisions);
+
+            vec3 lastTangent = getTangent(point0, point1);
+            vec3 absTangent = abs(lastTangent);
+
+            float min = 99999999999999999999999.0;
+            vec3 tmpNormal = vec3(0.0);
+            if (absTangent.x <= min) {
+              min = absTangent.x;
+              tmpNormal.x = 1.0;
+            }
+            if (absTangent.y <= min) {
+              min = absTangent.y;
+              tmpNormal.y = 1.0;
+            }
+            if (absTangent.z <= min) {
+              tmpNormal.z = 1.0;
+            }
+
+            vec3 tmpVec = normalize(cross(lastTangent, tmpNormal));
+            vec3 lastNormal = cross(lastTangent, tmpVec);
+            vec3 lastBinormal = cross(lastTangent, lastNormal);
+            vec3 lastPoint = point0;
+
+            vec3 normal;
+            vec3 tangent;
+            vec3 binormal;
+            vec3 point;
+            float maxLen = (subdivisions - 1.0);
+            float epSq = 0.0000000001 * 0.0000000001;
+            const float loopLength = 100.0;
+            for (float i = 1.0; i < loopLength; i += 1.0) {
+                float range = ${this.expression.getParameters()[0]}Max - ${this.expression.getParameters()[0]}Min;
+                float u = ${this.expression.getParameters()[0]}Min + i / maxLen * range;
+                // could avoid additional sample here at expense of ternary
+                // point = i == 1.0 ? point1 : sample(u);
+                point = sample(u);
+                tangent = getTangent(lastPoint, point);
+                normal = lastNormal;
+                binormal = lastBinormal;
+
+                tmpVec = cross(lastTangent, tangent);
+                if ((tmpVec.x * tmpVec.x + tmpVec.y * tmpVec.y + tmpVec.z * tmpVec.z) > epSq) {
+                    tmpVec = normalize(tmpVec);
+                    float tangentDot = dot(lastTangent, tangent);
+                    float theta = acos(clamp(tangentDot, -1.0, 1.0)); // clamp for floating pt errors
+                    rotateByAxisAngle(normal, tmpVec, theta);
+                }
+
+                binormal = cross(tangent, normal);
+                if (u >= t) break;
+
+                lastPoint = point;
+                lastTangent = tangent;
+                lastNormal = normal;
+                lastBinormal = binormal;
+            }
+
+            // extrude outward to create a tube
+            float tubeAngle = angle;
+            float circX = cos(tubeAngle);
+            float circY = sin(tubeAngle);
+
+            // compute the TBN matrix
+            vec3 T = tangent;
+            vec3 B = binormal;
+            vec3 N = -normal;
+
+            // extrude the path & create a new normal
+            outNormal.xyz = normalize(B * circX + N * circY);
+            outPosition.xyz = point + B * volume.x * circX + N * volume.y * circY;
         }
         
         void main() {
+          float ${this.expression.getParameters()[0]}Range = ${this.expression.getParameters()[0]}Max - ${this.expression.getParameters()[0]}Min;
           // current position to sample at
           // [-0.5 .. 0.5] to [tMin .. tMax]
-          float t = tMin + (pos + 0.5) * tRange;
+          float t = (pos * 2.0) * 0.5 + 0.5;
+          t = ${this.expression.getParameters()[0]}Min + t * ${this.expression.getParameters()[0]}Range;
         
           // build our tube geometry
           vec2 volume = vec2(thickness);
