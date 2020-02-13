@@ -12,7 +12,7 @@ require('./components/aframe-parent-constraint');
 require('./components/helper');
 require('./components/GraphComponent/Graph');
 require('./components/SliderComponent/slider.component');
-require('./components/GraphUIComponent/graph-ui.component');
+require('./components/GraphParameterUIComponent/graph-parameter-ui.component');
 
 AFRAME.registerComponent('interaction-hands', {
     init: function () {

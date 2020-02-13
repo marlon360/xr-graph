@@ -1,6 +1,6 @@
 import { MeshText2D, textAlign } from 'three-text2d'
 
-AFRAME.registerComponent('graph-ui', {
+AFRAME.registerComponent('graph-parameter-ui', {
     schema: {
         graph: {
             type: "selector"

@@ -15,7 +15,7 @@
 
       <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: false; showBoundingLabels: true; showWireframe: false; function: f(u,v) = [u, a * cos(v) + sin(u), v]"></a-entity >
       
-      <a-entity data-aabb-collider-dynamic="true" class="grabbable" position="-0.6 1 0" rotation="0 70 0" graph-ui="graph: #plot"></a-entity>
+      <a-entity data-aabb-collider-dynamic="true" class="grabbable" position="-0.6 1 0" rotation="0 70 0" graph-parameter-ui="graph: #plot"></a-entity>
       
 
       <a-entity my-slider="min: 1; max: 2.5; title: a value" id="aslider-down" position="0.5 1 0" rotation="0 -60 0"></a-entity>
