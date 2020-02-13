@@ -42,8 +42,7 @@
     "ar.js": "^2.1.4",
     "expr-eval": "^2.0.2",
     "super-hands": "^3.0.0",
-    "three": "^0.112.1",
-    "three-spritetext": "^1.2.1",
+    "three": "^0.111.0",
     "three-text2d": "^0.6.0"
   }
 }
