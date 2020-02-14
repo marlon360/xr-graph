@@ -47,6 +47,7 @@ AFRAME.registerComponent('my-slider', {
             var scene = gltf.scene;
             this.knob = scene.children[0];
             this.knob.scale.set(0.2,0.2, 0.2)
+            this.knob.rotation.set(0, Math.PI, 0)
             this.knob.material = this.knobMaterial;
             this.lever.add( this.knob );
 
@@ -69,7 +70,7 @@ AFRAME.registerComponent('my-slider', {
         minText.position.x = this.valueToLeverPosition(this.data.min);
         chassis.add(minText)
         
-        const maxText = new MeshText2D(this.data.max.toFixed(this.data.precision), { align: textAlign.right,  font: '28px Arial', fillStyle: '#FFFFFF' , antialias: true });
+        const maxText = new MeshText2D(this.data.max.toFixed(this.data.precision), { align: textAlign.left,  font: '28px Arial', fillStyle: '#FFFFFF' , antialias: true });
         maxText.scale.set(0.001,0.001,0.001);
         maxText.position.y = -0.02;
         maxText.position.x = this.valueToLeverPosition(this.data.max);
