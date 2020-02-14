@@ -11,37 +11,21 @@
     </a-assets>
 
     <!-- <a-sky color="#444"></a-sky> -->
-    <a-entity environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 1; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
+    <a-entity environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 0.97; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
 
       <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: true; showBoundingLabels: false; showWireframe: false; function: f(u,v) = [u, a * cos(v) + b * sin(u), v]"></a-entity >
       
       <a-entity visible="false" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" position="-0.6 1 0" rotation="0 70 0" graph-parameter-ui="graph: #plot"></a-entity>
       <a-entity visible="false" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" position="0.6 1 0" rotation="0 -70 0" graph-variable-ui="graph: #plot"></a-entity>
       
-
-      <a-entity visible="false" class="visible-on-vr">
-      <a-entity position="0.9 0.6 0">
-        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: reset graph transform;align: center"></a-entity>
-        <a-entity id="reset-button" ui-button position="0 0.4 -0.1" rotation="0 -180 -40"></a-entity>
+      <a-entity position="0.7 0.9 0.4" rotation="0 -90 0" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" visible="false">
+        <a-entity my-toggle="title: bounding box; active: true" event-set__active="_target: #plot; graph.showBoundingBox: true" event-set__inactive="_target: #plot; graph.showBoundingBox: false" position="0 0 0"></a-entity>
+        <a-entity my-toggle="title: labels; active: false" event-set__active="_target: #plot; graph.showBoundingLabels: true" event-set__inactive="_target: #plot; graph.showBoundingLabels: false" position="0 0.2 0"></a-entity>
+        <a-entity my-toggle="title: wireframe; active: false" event-set__active="_target: #plot; graph.showWireframe: true" event-set__inactive="_target: #plot; graph.showWireframe: false" position="0 0.4 0"></a-entity>
       </a-entity>
 
-      <a-entity position="0.9 0.6 0.5">
-        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: toggle bounding box;align: center"></a-entity>
-        <a-entity id="boundingbox-toggle" ui-toggle position="0 0.4 -0.1" rotation="70 -90 0"></a-entity>
-      </a-entity>
-      <a-entity position="0.9 1 0">
-        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: toggle wireframe;align: center"></a-entity>
-        <a-entity id="wireframe-toggle" ui-toggle position="0 0.4 -0.1" rotation="70 -90 0"></a-entity>
-      </a-entity>
-      <a-entity position="0.9 1 0.4">
-        <a-entity position="0 0.6 -0.1" rotation="0 -90 0" text="value: toggle labels;align: center"></a-entity>
-        <a-entity id="label-toggle" ui-toggle position="0 0.4 -0.1" rotation="70 -90 0"></a-entity>
-      </a-entity>
-
-    </a-entity>
-
-      <a-entity light="type: spot; color: #ffffff; intensity: 0.5; castShadow: true" position="0 5 0" rotation="-90 0 0"></a-entity>
-      <a-entity light="type: ambient; color: #ffffff; intensity: 0.7;" position="0 3 0"></a-entity>
+      <a-entity light="type: spot; color: #ffffff; intensity: 0.9; castShadow: false" position="0 2 0" rotation="-90 0 0"></a-entity>
+      <a-entity light="type: ambient; color: #ffffff; intensity: 0.6;" position="0 3 0"></a-entity>
 
       <!-- <a-entity position="0 1.2 -0.3" fps-counter="for90fps: false"></a-entity> -->
 
@@ -128,36 +112,6 @@
       zMax: decodeURIComponent(zMax)
     });
   }
-
-const boundingboxToggle = document.querySelector("#boundingbox-toggle");
-
-  boundingboxToggle.addEventListener('change', (evt) => {
-    plot.setAttribute("graph", {
-      showBoundingBox: evt.detail.value == 1
-    })
-  })
-  const wireframeToggle = document.querySelector("#wireframe-toggle");
-
-  wireframeToggle.addEventListener('change', (evt) => {
-    plot.setAttribute("graph", {
-      showWireframe: evt.detail.value == 1
-    })
-  })
-
-  const labelToggle = document.querySelector("#label-toggle");
-
-  labelToggle.addEventListener('change', (evt) => {
-    plot.setAttribute("graph", {
-      showBoundingLabels: evt.detail.value == 1
-    })
-  })
-
-  const resetButton = document.querySelector("#reset-button");
-  resetButton.addEventListener('pressed', (evt) => {
-    plot.setAttribute('scale', '0.5 0.5 0.5');
-    plot.setAttribute('position', '0 1 -0.8');
-    plot.setAttribute('rotation', '0 0 0');
-  })
   
   // var a = 1;
 

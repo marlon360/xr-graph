@@ -13,6 +13,7 @@ require('./components/aframe-parent-constraint');
 require('./components/helper');
 require('./components/GraphComponent/Graph');
 require('./components/SliderComponent/slider.component');
+require('./components/ToggleComponent/toggle.component');
 require('./components/GraphParameterUIComponent/graph-parameter-ui.component');
 require('./components/GraphVariableUIComponent/graph-variable-ui.component');
 
