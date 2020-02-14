@@ -217,7 +217,6 @@ if (typeof AFRAME === 'undefined') {
   
         // Static, reuse box and centers.
         if (!el.dataset.aabbColliderDynamic) {
-          console.log("not set");
           if (!el.object3D.aabbBox) {
             // Box.
             el.object3D.aabbBox = new THREE.Box3().setFromObject(el.object3D);
@@ -225,7 +224,6 @@ if (typeof AFRAME === 'undefined') {
             el.object3D.boundingBoxCenter = new THREE.Vector3();
             el.object3D.aabbBox.getCenter(el.object3D.boundingBoxCenter);
           } else {
-            console.log("already set");
             
           }
           box = el.object3D.aabbBox;
