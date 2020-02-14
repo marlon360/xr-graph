@@ -4,6 +4,7 @@ require('aframe-environment-component');
 require('aframe-log-component');
 require('aframe-plot-component');
 require('aframe-ui-widgets');
+require('aframe-orbit-controls');
 
 require('aframe-fps-counter-component');
 
