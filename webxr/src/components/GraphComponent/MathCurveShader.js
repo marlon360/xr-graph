@@ -34,12 +34,14 @@ export class MathCurveMaterial {
 
     getGLSLFunctionString() {
         let glslString = this.expression.getGLSLFunctionString();
+        const params = this.expression.getParameters()
         if (this.expression.getOutputSize() == 2) {
-            return `vec3(0,${glslString})`;
+            return `vec3(${glslString}, 0)`;
+        } else if (this.expression.getOutputSize() == 1) {
+            return `vec3(${params[0]}, ${glslString},0)`;
         } else if (this.expression.getOutputSize() == 3) {
             return glslString;
         } else {
-            const params = this.expression.getParameters()
             if (this.expression.getInputSize() == 2) {
                 return `vec3(${params[0]},${glslString}, ${params[1]})`;
             }

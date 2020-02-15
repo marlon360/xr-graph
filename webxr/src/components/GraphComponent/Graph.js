@@ -265,6 +265,12 @@ AFRAME.registerComponent('graph', {
         let func;
         if (inputSize == 2 && outputSize == 1) {
             func = (x,y) => [x,JSFunc(x,y),y]
+        } else if (inputSize == 1 && outputSize == 1) {
+            func = (x,y) => [x,JSFunc(x),0]
+        } else if (inputSize == 1 && outputSize == 2) {
+            func = (t) => [JSFunc(t)[0], JSFunc(t)[1], 0]
+        } else if (inputSize == 1 && outputSize == 1) {
+            func = (t) => [JSFunc(t), 0, 0]
         } else {
             func = JSFunc;
         }
@@ -273,8 +279,7 @@ AFRAME.registerComponent('graph', {
             funcResult = func(...explicitFunctionParameter[i]);
             xValue = funcResult[0];
             yValue = funcResult[1];
-            zValue = funcResult[2];
-            
+            zValue = funcResult[2];            
 
             if (this.xMin == null || xValue < this.xMin) {
                 this.xMin = xValue
@@ -294,7 +299,21 @@ AFRAME.registerComponent('graph', {
             if (this.zMax == null || zValue > this.zMax) {
                 this.zMax = zValue
             }
+        }        
+
+        if (this.xMax - this.xMin == 0) {
+            this.xMax += 0.2;
+            this.xMin -= 0.2;
         }
+        if (this.yMax - this.yMin == 0) {
+            this.yMax += 0.2;
+            this.yMin -= 0.2;
+        }
+        if (this.zMax - this.zMin == 0) {
+            this.zMax += 0.2;
+            this.zMin -= 0.2;
+        }
+
         const minVec = new THREE.Vector3(this.xMin, this.yMin, this.zMin);
         const maxVec = new THREE.Vector3(this.xMax, this.yMax, this.zMax);
 
