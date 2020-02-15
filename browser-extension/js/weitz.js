@@ -26,7 +26,11 @@ const tMin = findGetParameter("tmin");
 const tMax = findGetParameter("tmax");
 
 const aFactor = findGetParameter("afactor");
+const aMin = findGetParameter("amin");
+const aMax = findGetParameter("amax");
 const bFactor = findGetParameter("bfactor");
+const bMin = findGetParameter("bmin");
+const bMax = findGetParameter("bmax");
 
 
 let functionParams = []
@@ -60,8 +64,25 @@ if (tMin == null) {
         link += "&tMax=" + tMax
     }
 }
-link += "&a=" + aFactor;
-link += "&b=" + bFactor;
+if (aMin != null) {
+    link += "&aMin=" + aMin;
+}
+if (aMax != null) {
+    link += "&aMax=" + aMax;
+}
+parseFloat()
+if (aFactor != null) {
+    link += "&a=" + (parseFloat(aMin) + parseFloat(aFactor) * (parseFloat(aMax) - parseFloat(aMin)));
+}
+if (bMin != null) {
+    link += "&bMin=" + bMin;
+}
+if (bMax != null) {
+    link += "&bMax=" + bMax;
+}
+if (bFactor != null) {
+    link += "&b=" + (parseFloat(bMin) + parseFloat(bFactor) * (parseFloat(bMax) - parseFloat(bMin)));
+}
 
 
 let button = document.createElement("a");
