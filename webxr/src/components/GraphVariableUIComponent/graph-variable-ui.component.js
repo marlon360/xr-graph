@@ -15,7 +15,9 @@ AFRAME.registerComponent('graph-variable-ui', {
             throw new Error("Graph Component not found!")
         }
 
-        this.group = new THREE.Group();
+        this.data.graph.addEventListener("function-changed", () => {
+            this.reload();
+        })
                 
         this.variables = this.graph.getVariables();
 
@@ -35,8 +37,28 @@ AFRAME.registerComponent('graph-variable-ui', {
             this.el.appendChild(slider)
             index++;
         }
+    },
+    reload: function() {
+        this.el.innerHTML = "";
+                        
+        this.variables = this.graph.getVariables();
 
-        this.el.setObject3D('mesh', this.group)
+        const height = 0.30;
+        const offset = Object.keys(this.variables).length * height / 2;
+
+        let index = 0;
+        for (let [variable, value] of Object.entries(this.variables)) {
+            let slider = this.createSlider(variable, value);
+            slider.setAttribute('position', `0 ${index * -height + offset} 0`)
+            slider.addEventListener('change', (evt) => {
+                var newvalue = evt.detail.value;
+                let graphAtributes = {}
+                graphAtributes[variable] = newvalue;
+                this.data.graph.setAttribute('graph', graphAtributes)
+            })
+            this.el.appendChild(slider)
+            index++;
+        }
     },
     createSlider: function(variable, value, min = value - 1, max = value + 1) {
         const slider = document.createElement("a-entity");

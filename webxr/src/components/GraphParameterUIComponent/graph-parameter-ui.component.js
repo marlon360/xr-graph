@@ -13,8 +13,14 @@ AFRAME.registerComponent('graph-parameter-ui', {
         this.graph = this.data.graph.components["graph"];
         if (this.graph == null) {
             throw new Error("Graph Component not found!")
-        }
+        }  
+        this.data.graph.addEventListener('function-changed', () => {
+            this.setup()
+        })
 
+        this.setup();
+    },
+    setup: function() {
         this.group = new THREE.Group();
         
         this.controllers = Array.prototype.slice.call(document.querySelectorAll('a-entity[hand-controls]'));
@@ -163,7 +169,7 @@ AFRAME.registerComponent('graph-parameter-ui', {
 
         this.el.setObject3D('mesh', this.group)
         
-        this.grabbedKnob = null;        
+        this.grabbedKnob = null;     
     },
     updateTextPosition: function() {
 
