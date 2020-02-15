@@ -72,8 +72,7 @@ export default function expressionToGlslString(tokens) {
       f = item.value;
       if (f === '-' || f === '+') {
         nstack.push('(' + f + n1 + ')');
-      }
-      if (f === 'not') {
+      } else if (f === 'not') {
         nstack.push('(' + '!' + n1 + ')');
       } else if (f === '!') {
         nstack.push('fac(' + n1 + ')');
