@@ -28,20 +28,14 @@ function debounce(func, wait, immediate) {
 
 AFRAME.registerComponent('graph', {
     schema: {
-        segmentsMultiplier: {
-            default: 2
-        },
-        showGrid: {
-            default: true
-        },
         showBoundingLabels: {
-            default: true
+            default: false
         },
         showAxes: {
             default: false
         },
         showBoundingBox: {
-            default: false
+            default: true
         },
         showWireframe: {
             default: false
@@ -131,9 +125,11 @@ AFRAME.registerComponent('graph', {
         if (this.data.showBoundingBox != oldData.showBoundingBox) {
             this.boundingBoxVisual.visible = this.data.showBoundingBox;
         }
+        
         if (this.data.showWireframe != oldData.showWireframe) {
-            if (this.graph.material.uniforms.wireframeActive != null )
-            this.graph.material.uniforms.wireframeActive.value = this.data.showWireframe;
+            if (this.graph.material.uniforms.wireframeActive != null ) {
+                this.graph.material.uniforms.wireframeActive.value = this.data.showWireframe;
+            }
         }
         for (let [param, info] of Object.entries(this.getParameterExtrema())) {
             if (this.graph.material.uniforms[param+"Min"].value != info.min) {

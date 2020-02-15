@@ -9,7 +9,7 @@ export class MathGraphMaterial {
             colorA: {type: 'vec3', value: new THREE.Color(0x74ebd5)},
             yBoundaryMin: {type: 'float', value: -3.2},
             yBoundaryMax: {type: 'float', value: 3.2},
-            wireframeActive: { type: "bool", value: true}
+            wireframeActive: { type: "bool", value: false}
         }
 
         this.expression.getParameters().forEach(param => {
