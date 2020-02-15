@@ -16,29 +16,12 @@ AFRAME.registerComponent('graph-variable-ui', {
         }
 
         this.data.graph.addEventListener("function-changed", () => {
-            this.reload();
+            this.setup();
         })
                 
-        this.variables = this.graph.getVariables();
-
-        const height = 0.30;
-        const offset = Object.keys(this.variables).length * height / 2;
-
-        let index = 0;
-        for (let [variable, value] of Object.entries(this.variables)) {
-            let slider = this.createSlider(variable, value);
-            slider.setAttribute('position', `0 ${index * -height + offset} 0`)
-            slider.addEventListener('change', (evt) => {
-                var newvalue = evt.detail.value;
-                let graphAtributes = {}
-                graphAtributes[variable] = newvalue;
-                this.data.graph.setAttribute('graph', graphAtributes)
-            })
-            this.el.appendChild(slider)
-            index++;
-        }
+        this.setup()
     },
-    reload: function() {
+    setup: function() {
         this.el.innerHTML = "";
                         
         this.variables = this.graph.getVariables();
