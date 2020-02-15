@@ -28,47 +28,40 @@ const tMax = findGetParameter("tmax");
 const aFactor = findGetParameter("afactor");
 const bFactor = findGetParameter("bfactor");
 
-xParam = xParam.replace(/a/g, aFactor);
-xParam = xParam.replace(/b/g, bFactor);
-
-yParam = yParam.replace(/a/g, aFactor);
-yParam = yParam.replace(/b/g, bFactor);
-if (zParam != null) {
-    zParam = zParam.replace(/a/g, aFactor);
-    zParam = zParam.replace(/b/g, bFactor);
-}
 
 let functionParams = []
 functionParams.push(xParam);
-functionParams.push(yParam);
 if (zParam) {
     functionParams.push(zParam);
 }
+functionParams.push(yParam);
 
-let link = "https://vr-graph.now.sh?func=";
+let link = "https://localhost:8080?function=";
 if (tMin == null) {
     link += "[" + functionParams.join(', ') + "]"
     if (uMin != null) {
-        link += "&xmin=" + uMin
+        link += "&uMin=" + uMin
     }
     if (uMax != null) {
-        link += "&xmax=" + uMax
+        link += "&uMax=" + uMax
     }
     if (vMin != null) {
-        link += "&zmin=" + vMin
+        link += "&vMin=" + vMin
     }
     if (vMax != null) {
-        link += "&zmax=" + vMax
+        link += "&vMax=" + vMax
     }
 } else {
     link += "[" + functionParams.join(', ') + "]"
     if (tMin != null) {
-        link += "&tmin=" + tMin
+        link += "&tMin=" + tMin
     }
     if (tMax != null) {
-        link += "&tmax=" + tMax
+        link += "&tMax=" + tMax
     }
 }
+link += "&a=" + aFactor;
+link += "&b=" + bFactor;
 
 
 let button = document.createElement("a");
