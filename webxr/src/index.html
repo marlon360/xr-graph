@@ -24,6 +24,8 @@
         <a-entity my-toggle="title: wireframe; active: false" event-set__active="_target: #plot; graph.showWireframe: true" event-set__inactive="_target: #plot; graph.showWireframe: false" position="0 0.4 0"></a-entity>
       </a-entity>
 
+      <a-entity id="function-text" position="0 0.01 -0.5" rotation="-90 0 0" scale="1.2 1.2 1.2" my-text="text: ; color: #777"></a-entity>
+
       <a-entity light="type: spot; color: #ffffff; intensity: 0.9; castShadow: false" position="0 2 0" rotation="-90 0 0"></a-entity>
       <a-entity light="type: ambient; color: #ffffff; intensity: 0.6;" position="0 3 0"></a-entity>
 
@@ -52,8 +54,19 @@
     })
   })
 
-  const plot = document.querySelector("#plot");  
+  const plot = document.querySelector("#plot");
+  const textEl = document.querySelector("#function-text");
   const graph = plot.components["graph"];
+
+  plot.addEventListener('function-changed', (evt) => {    
+    textEl.setAttribute('my-text', {
+      text: evt.detail.function
+    })
+  })
+
+  textEl.setAttribute('my-text', {
+    text: plot.components["graph"].data.function
+  })
 
   function findGetParameter(parameterName) {
     var result = null,

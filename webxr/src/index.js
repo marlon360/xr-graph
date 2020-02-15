@@ -16,6 +16,7 @@ require('./components/SliderComponent/slider.component');
 require('./components/ToggleComponent/toggle.component');
 require('./components/GraphParameterUIComponent/graph-parameter-ui.component');
 require('./components/GraphVariableUIComponent/graph-variable-ui.component');
+require('./components/TextComponent/text.component');
 
 AFRAME.registerComponent('interaction-hands', {
     init: function () {

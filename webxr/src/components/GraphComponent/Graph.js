@@ -117,9 +117,10 @@ AFRAME.registerComponent('graph', {
     update: function (oldData) {
 
         if (this.data.function != oldData.function) {
+            this.el.emit("function-changed", {function: this.data.function})
             this.expression = new MathExpression(this.data.function);
             this.root.remove(this.graph);
-            this.createGraph(this.expression);
+            this.graph = this.createGraph(this.expression);
             this.root.add(this.graph);
             this.boundariesNeedUpdate = true;
         }
