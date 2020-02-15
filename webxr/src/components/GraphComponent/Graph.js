@@ -115,7 +115,7 @@ AFRAME.registerComponent('graph', {
         }
     },
     update: function (oldData) {
-
+        
         if (this.data.function != oldData.function) {
             this.expression = new MathExpression(this.data.function);
             this.el.emit("function-changed", {function: this.data.function})
@@ -160,10 +160,17 @@ AFRAME.registerComponent('graph', {
     getVariables: function() {
         let variables = {};
         this.expression.getVariables().forEach(variable => {
-            let value = 1;
+            let value;
             if (this.data[variable] != null) {
                 value = this.data[variable];
+            } else if (this.data[variable+"Min"] != null) {
+                value = this.data[variable+"Min"];
             }
+            else if (this.data[variable+"Max"] != null) {
+                value = this.data[variable+"Max"];
+            } else {
+                value = 1
+            }            
             variables[variable] = value;
         });
         return variables;
@@ -180,11 +187,11 @@ AFRAME.registerComponent('graph', {
                     default: 6
                 };
             });
-            expression.getVariables().forEach(param => {
-                schema[param] = {
-                    default: 1
-                };
-            });
+            // expression.getVariables().forEach(param => {
+            //     schema[param] = {
+            //         default: 1
+            //     };
+            // });
           this.extendSchema(schema);
         }
     },

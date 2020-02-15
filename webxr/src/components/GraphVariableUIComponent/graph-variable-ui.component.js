@@ -31,7 +31,7 @@ AFRAME.registerComponent('graph-variable-ui', {
 
         let index = 0;
         for (let [variable, value] of Object.entries(this.variables)) {
-            let slider = this.createSlider(variable, value);
+            let slider = this.createSlider(variable, value, this.graph.data[variable+"Min"], this.graph.data[variable+"Max"]);
             slider.setAttribute('position', `0 ${index * -height + offset} 0`)
             slider.addEventListener('change', (evt) => {
                 var newvalue = evt.detail.value;
@@ -43,7 +43,13 @@ AFRAME.registerComponent('graph-variable-ui', {
             index++;
         }
     },
-    createSlider: function(variable, value, min = value - 1, max = value + 1) {
+    createSlider: function(variable, value, min, max) {
+        if (min == null) {
+            min = value - 1
+        }
+        if (max == null) {
+            max = value + 1
+        }
         const slider = document.createElement("a-entity");
         slider.setAttribute('my-slider', {
             title: `${variable}Value`,
