@@ -137,7 +137,7 @@ export class MathGraphMaterial {
                 if (mod(vUv.x, 0.02) < 0.003 || mod(vUv.y, 0.02) < 0.003) {
                     color = vec4(0.1, 0.1, 0.1, 1);
                 } else {
-                    color = vec4(color.xyz, 0.3);
+                    color = vec4(color.xyz, 0.7);
                 }
             }
             gl_FragColor = color;
