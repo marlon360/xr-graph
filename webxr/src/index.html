@@ -13,7 +13,7 @@
     <!-- <a-sky color="#444"></a-sky> -->
     <a-entity environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 0.97; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
 
-      <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.8" graph="uMin: -6.2; uMax: 6.2; vMin: 0; vMax: 6.2; showBoundingBox: true; showBoundingLabels: false; showWireframe: false; function: f(u,v) = [u, v, a * cos(v) + b * sin(u)]"></a-entity >
+      <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.6" graph="uMin: -6.2; uMax: 6.2; vMin: -6.2; vMax: 6.2; showBoundingBox: true; showBoundingLabels: false; showWireframe: false; function: f(u,v) = [u, v, a * cos(v) + b * sin(u)]"></a-entity >
       
       <a-entity visible="false" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" position="-0.6 1 0" rotation="0 70 0" graph-parameter-ui="graph: #plot"></a-entity>
       <a-entity visible="false" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" position="0.6 1 0" rotation="0 -70 0" graph-variable-ui="graph: #plot"></a-entity>
@@ -25,7 +25,7 @@
         <a-entity my-toggle="title: grid; active: false" event-set__active="_target: #plot; graph.showGrid: true" event-set__inactive="_target: #plot; graph.showGrid: false" position="0.25 0.2 0"></a-entity>
       </a-entity>
 
-      <a-entity id="function-text" position="0 0.01 -0.5" rotation="-90 0 0" scale="1.2 1.2 1.2" my-text="text: ; color: #777"></a-entity>
+      <a-entity id="function-text" position="0 0.01 -0.3" rotation="-90 0 0" scale="1.2 1.2 1.2" my-text="text: ; color: #777"></a-entity>
 
       <a-entity light="type: spot; color: #ffffff; intensity: 0.9; castShadow: false" position="0 2 0" rotation="-90 0 0"></a-entity>
       <a-entity light="type: ambient; color: #ffffff; intensity: 0.6;" position="0 3 0"></a-entity>
@@ -37,7 +37,7 @@
     <a-entity interaction-hands aabb-collider="objects: .grabbable" id="lhand" hand-controls="hand: left; handModelStyle: highPoly" mixin="touch"></a-entity>
     <a-entity interaction-hands aabb-collider="objects: .grabbable" id="rhand" hand-controls="hand: right; handModelStyle: highPoly" mixin="touch"></a-entity>
 
-    <a-entity camera  orbit-controls="target: 0 1 -0.8; initialPosition: -0.5 1.4 0; minDistance: -0.01"></a-entity>
+    <a-entity camera  orbit-controls="target: 0 1 -0.6; initialPosition: -0.5 1.4 0.3; minDistance: -0.01"></a-entity>
   </a-scene>
 </body>
 <script>
