@@ -35,3 +35,5 @@ Marker for AR:
 ## Documentation
 
 [The Surface Graph](./docs/graph.md)
+
+[Browser Extension](./docs/browser_extension.md)
