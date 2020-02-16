@@ -58,7 +58,8 @@ export class MathGraphMaterial {
 
         vec3 userDefinedPosition() {
             ${this.expression.getParameters().map((param, index) => `float ${param} = ${param}Min + (position.${this.vertexIdentifier[index]} + 0.5) * ${param}Range;`).join("\n")}
-            return ${this.getGLSLFunctionString()};
+            vec3 newpos = ${this.getGLSLFunctionString()};
+            return newpos.xzy;
         }
     
         void main() {

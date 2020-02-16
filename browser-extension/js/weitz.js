@@ -35,10 +35,10 @@ const bMax = findGetParameter("bmax");
 
 let functionParams = []
 functionParams.push(xParam);
+functionParams.push(yParam);
 if (zParam) {
     functionParams.push(zParam);
 }
-functionParams.push(yParam);
 
 let link = "https://localhost:8080?function=";
 if (tMin == null) {

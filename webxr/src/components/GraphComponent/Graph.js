@@ -279,6 +279,8 @@ AFRAME.registerComponent('graph', {
             func = (t) => [JSFunc(t)[0], JSFunc(t)[1], 0]
         } else if (inputSize == 1 && outputSize == 1) {
             func = (t) => [JSFunc(t), 0, 0]
+        } else if (inputSize == 2 && outputSize == 3) {
+            func = (u,v) => [JSFunc(u,v)[0], JSFunc(u,v)[2], JSFunc(u,v)[1]]
         } else {
             func = JSFunc;
         }
