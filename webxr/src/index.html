@@ -18,10 +18,11 @@
       <a-entity visible="false" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" position="-0.6 1 0" rotation="0 70 0" graph-parameter-ui="graph: #plot"></a-entity>
       <a-entity visible="false" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" position="0.6 1 0" rotation="0 -70 0" graph-variable-ui="graph: #plot"></a-entity>
       
-      <a-entity position="0.7 0.9 0.4" rotation="0 -90 0" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" visible="false">
+      <a-entity position="0.7 1 0.4" rotation="0 -90 0" data-aabb-collider-dynamic="true" class="grabbable visible-on-vr" visible="false">
         <a-entity my-toggle="title: bounding box; active: true" event-set__active="_target: #plot; graph.showBoundingBox: true" event-set__inactive="_target: #plot; graph.showBoundingBox: false" position="0 0 0"></a-entity>
         <a-entity my-toggle="title: labels; active: false" event-set__active="_target: #plot; graph.showBoundingLabels: true" event-set__inactive="_target: #plot; graph.showBoundingLabels: false" position="0 0.2 0"></a-entity>
-        <a-entity my-toggle="title: wireframe; active: false" event-set__active="_target: #plot; graph.showWireframe: true" event-set__inactive="_target: #plot; graph.showWireframe: false" position="0 0.4 0"></a-entity>
+        <a-entity my-toggle="title: wireframe; active: false" event-set__active="_target: #plot; graph.showWireframe: true" event-set__inactive="_target: #plot; graph.showWireframe: false" position="0.25 0 0"></a-entity>
+        <a-entity my-toggle="title: grid; active: false" event-set__active="_target: #plot; graph.showGrid: true" event-set__inactive="_target: #plot; graph.showGrid: false" position="0.25 0.2 0"></a-entity>
       </a-entity>
 
       <a-entity id="function-text" position="0 0.01 -0.5" rotation="-90 0 0" scale="1.2 1.2 1.2" my-text="text: ; color: #777"></a-entity>

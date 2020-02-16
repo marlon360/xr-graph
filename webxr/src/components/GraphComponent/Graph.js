@@ -40,6 +40,9 @@ AFRAME.registerComponent('graph', {
         showWireframe: {
             default: false
         },
+        showGrid: {
+            default: false
+        },
         function: {
             default: "f(u, v) = [1.5 * u, 0.1 * u^2 * cos(v), 0.1 * u^2 * sin(v)]"
         },
@@ -78,6 +81,12 @@ AFRAME.registerComponent('graph', {
         
         this.updateAxesLabels();
         this.root.add(this.labels);
+
+        this.gridHelperGroup = new THREE.Group();
+        this.gridHelper = new THREE.GridHelper( 10, 10, 0xFF3333, 0x666666 );
+        this.gridHelperGroup.add(this.gridHelper);
+        this.gridHelperGroup.visible = this.data.showGrid;
+        this.root.add( this.gridHelperGroup );
 
         // weird fix
         new THREE.BufferGeometry();
@@ -124,6 +133,9 @@ AFRAME.registerComponent('graph', {
         }
         if (this.data.showBoundingBox != oldData.showBoundingBox) {
             this.boundingBoxVisual.visible = this.data.showBoundingBox;
+        }
+        if (this.data.showGrid != oldData.showGrid) {
+            this.gridHelperGroup.visible = this.data.showGrid;
         }
         
         if (this.data.showWireframe != oldData.showWireframe) {
