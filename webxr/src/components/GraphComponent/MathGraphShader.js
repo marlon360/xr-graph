@@ -33,16 +33,14 @@ export class MathGraphMaterial {
     }
 
     getGLSLFunctionString() {
+        const params = this.expression.getParameters()
         let glslString = this.expression.getGLSLFunctionString();
-        if (this.expression.getOutputSize() == 2) {
+        if (this.expression.getOutputSize() == 1 && this.expression.getInputSize() == 2) {
+            return `vec3(${params[0]},${params[1]}, ${glslString})`;
+        } else if (this.expression.getOutputSize() == 2) {
             return `vec3(0,${glslString})`;
-        } else if (this.expression.getOutputSize() == 3) {
-            return glslString;
         } else {
-            const params = this.expression.getParameters()
-            if (this.expression.getInputSize() == 2) {
-                return `vec3(${params[0]},${glslString}, ${params[1]})`;
-            }
+            return glslString;
         }
         return glslString;
     }

@@ -17,10 +17,17 @@ let xParam = findGetParameter("xFunctionText");
 let yParam = findGetParameter("yFunctionText");
 let zParam = findGetParameter("zFunctionText");
 
+let functionText = findGetParameter("functionText");
+
 const uMin = findGetParameter("umin");
 const uMax = findGetParameter("umax");
 const vMin = findGetParameter("vmin");
 const vMax = findGetParameter("vmax");
+
+const xMin = findGetParameter("xmin");
+const xMax = findGetParameter("xmax");
+const yMin = findGetParameter("ymin");
+const yMax = findGetParameter("ymax");
 
 const tMin = findGetParameter("tmin");
 const tMax = findGetParameter("tmax");
@@ -34,15 +41,23 @@ const bMax = findGetParameter("bmax");
 
 
 let functionParams = []
-functionParams.push(xParam);
-functionParams.push(yParam);
+if (xParam != null) {
+    functionParams.push(xParam);
+}
+if(yParam != null) {
+    functionParams.push(yParam);
+}
 if (zParam) {
     functionParams.push(zParam);
 }
 
 let link = "https://localhost:8080?function=";
 if (tMin == null) {
-    link += "[" + functionParams.join(', ') + "]"
+    if (functionParams.length > 0) {
+        link += "[" + functionParams.join(', ') + "]"
+    } else {
+        link += functionText;
+    }
     if (uMin != null) {
         link += "&uMin=" + uMin
     }
@@ -54,6 +69,18 @@ if (tMin == null) {
     }
     if (vMax != null) {
         link += "&vMax=" + vMax
+    }
+    if (xMin != null) {
+        link += "&xMin=" + xMin
+    }
+    if (xMax != null) {
+        link += "&xMax=" + xMax
+    }
+    if (yMin != null) {
+        link += "&yMin=" + yMin
+    }
+    if (yMax != null) {
+        link += "&yMax=" + yMax
     }
 } else {
     link += "[" + functionParams.join(', ') + "]"
