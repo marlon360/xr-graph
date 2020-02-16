@@ -42,7 +42,6 @@ export class MathGraphMaterial {
         } else {
             return glslString;
         }
-        return glslString;
     }
 
     vertexShader() {

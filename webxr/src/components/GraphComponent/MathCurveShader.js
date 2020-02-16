@@ -36,17 +36,12 @@ export class MathCurveMaterial {
         let glslString = this.expression.getGLSLFunctionString();
         const params = this.expression.getParameters()
         if (this.expression.getOutputSize() == 2) {
-            return `vec3(${glslString}, 0)`;
+            return `vec3(${glslString}.x, 0, ${glslString}.y)`;
         } else if (this.expression.getOutputSize() == 1) {
             return `vec3(${params[0]}, 0,${glslString})`;
-        } else if (this.expression.getOutputSize() == 3) {
-            return glslString;
         } else {
-            if (this.expression.getInputSize() == 2) {
-                return `vec3(${params[0]},${glslString}, ${params[1]})`;
-            }
+            return glslString;
         }
-        return glslString;
     }
 
     vertexShader() {
