@@ -83,8 +83,21 @@ AFRAME.registerComponent('graph', {
         this.root.add(this.labels);
 
         this.gridHelperGroup = new THREE.Group();
-        this.gridHelper = new THREE.GridHelper( 10, 10, 0xFF3333, 0x666666 );
-        this.gridHelperGroup.add(this.gridHelper);
+        const opacity = 0.5;
+        this.gridHelperXY = new THREE.GridHelper( 10, 10, 0xFF3333, 0x666666 );
+        this.gridHelperXY.material.opacity = opacity;
+        this.gridHelperXY.material.transparent = true;
+        this.gridHelperYZ = new THREE.GridHelper( 10, 10, 0xFF3333, 0x666666 );
+        this.gridHelperYZ.material.opacity = opacity;
+        this.gridHelperYZ.material.transparent = true;
+        this.gridHelperYZ.rotation.set(0,0,-Math.PI/2)
+        this.gridHelperXZ = new THREE.GridHelper( 10, 10, 0xFF3333, 0x666666 );
+        this.gridHelperXZ.material.opacity = opacity;
+        this.gridHelperXZ.material.transparent = true;
+        this.gridHelperXZ.rotation.set(0,-Math.PI/2,-Math.PI/2)
+        this.gridHelperGroup.add(this.gridHelperXY);
+        this.gridHelperGroup.add(this.gridHelperYZ);
+        this.gridHelperGroup.add(this.gridHelperXZ);
         this.gridHelperGroup.visible = this.data.showGrid;
         this.root.add( this.gridHelperGroup );
 
