@@ -78,7 +78,7 @@ export class MathCurveMaterial {
         
         vec3 sample (float t) {
           vec3 newpos = ${this.getGLSLFunctionString()};
-          return newpos.xzy;
+          return newpos.xzy * vec3(1.0, 1.0, -1.0);;
         }
 
         vec3 getTangent (vec3 a, vec3 b) {

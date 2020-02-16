@@ -289,7 +289,7 @@ AFRAME.registerComponent('graph', {
             funcResult = func(...explicitFunctionParameter[i]);
             xValue = funcResult[0];
             yValue = funcResult[1];
-            zValue = funcResult[2];            
+            zValue = funcResult[2] * -1;            
 
             if (this.xMin == null || xValue < this.xMin) {
                 this.xMin = xValue
