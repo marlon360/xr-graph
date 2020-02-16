@@ -38,7 +38,7 @@ export class MathCurveMaterial {
         if (this.expression.getOutputSize() == 2) {
             return `vec3(${glslString}, 0)`;
         } else if (this.expression.getOutputSize() == 1) {
-            return `vec3(${params[0]}, ${glslString},0)`;
+            return `vec3(${params[0]}, 0,${glslString})`;
         } else if (this.expression.getOutputSize() == 3) {
             return glslString;
         } else {
@@ -77,7 +77,8 @@ export class MathCurveMaterial {
         varying vec3 vNormal;
         
         vec3 sample (float t) {
-          return ${this.getGLSLFunctionString()};
+          vec3 newpos = ${this.getGLSLFunctionString()};
+          return newpos.xzy;
         }
 
         vec3 getTangent (vec3 a, vec3 b) {
