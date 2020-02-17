@@ -3,7 +3,7 @@
 With XR Graph it is possible to view mathematical graphs in VR and AR.
 With the provided browser extension you can view functions directly from [https://wolframalpha.com](https://wolframalpha.com) or [http://weitz.de/plot](http://weitz.de/plot).
 
-![WebVR](./media/webvr.gif)
+![WebVR](./media/webxr.gif)
 
 ![AR](./media/ar.gif)
 
