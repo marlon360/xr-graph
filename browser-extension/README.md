@@ -1,25 +1,4 @@
-# Chrome Extension Starter Kit
+# XR Browser Extension
 
-
-## Structure
-
-
-### background.js
-
-- Runs on the background all the time
-- Common for all windows and tabs
-
-
-### content.js
-
-- Is injected to every page specified in manifest.json (content_scripts.matches)
-
-
-### popup.js
-
-- Is run separately for every given page
-
-
-### options.js
-
-- Runs only in Options page
+The extension injects custom Javascript Code to math websites.
+If a function is detected, a button with a link to xr-graph will be added to the website.
