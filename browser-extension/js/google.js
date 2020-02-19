@@ -1,5 +1,7 @@
 'use strict';
 
+setTimeout(function () {
+
 const header = document.getElementById("graph_heading");
 
 if (header != null) {
@@ -46,3 +48,5 @@ function updateButton(el, func, additionalParams) {
 
     }
 }
+
+}, 1000);
