@@ -51,7 +51,7 @@ if (zParam) {
     functionParams.push(zParam);
 }
 
-let link = "https://localhost:8080?function=";
+let link = "https://xr-graph.now.sh/?function=";
 if (tMin == null) {
     if (functionParams.length > 0) {
         link += "[" + functionParams.join(', ') + "]"
