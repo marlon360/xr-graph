@@ -22,17 +22,19 @@ export default function expressionToGlslString(tokens) {
     var type = item.type;
     if (type === INUMBER) {
       if (typeof item.value === 'number' && item.value < 0) {
-        if (!item.value.toString().includes('.')) {
-          item.value = parseFloat(item.value).toFixed(2);
+        let tempValue = item.value;
+        if (!tempValue.toString().includes('.')) {
+          tempValue = parseFloat(tempValue).toFixed(2);
         }
-        nstack.push('(' + item.value + ')');
+        nstack.push('(' + tempValue + ')');
       } else if (Array.isArray(item.value)) {
         nstack.push('[' + item.value.map(escapeValue).join(', ') + ']');
       } else {
-        if (!item.value.toString().includes('.')) {
-          item.value = parseFloat(item.value).toFixed(2);
+        let tempValue = item.value;
+        if (!tempValue.toString().includes('.')) {
+          tempValue = parseFloat(item.value).toFixed(2);
         }
-        nstack.push(item.value);
+        nstack.push(tempValue);
       }
     } else if (type === IOP2) {
       n2 = nstack.pop();
