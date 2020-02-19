@@ -81,6 +81,16 @@
         });
     return result;
   }
+
+  function cleanString(input) {
+      var output = "";
+      for (var i=0; i<input.length; i++) {
+          if (input.charCodeAt(i) <= 127) {
+              output += input.charAt(i);
+          }
+      }
+      return output;
+  }
   
   const getAllGetParameters = () => {
     parameters = {};
@@ -89,7 +99,7 @@
         .split("&")
         .forEach(function (item) {
           tmp = item.split("=");
-          parameters[tmp[0]] = decodeURIComponent(tmp[1]);
+          parameters[tmp[0]] = cleanString(decodeURIComponent(tmp[1]));
         });
     return parameters
   }
