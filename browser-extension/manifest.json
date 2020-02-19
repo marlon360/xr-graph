@@ -36,6 +36,18 @@
     },
     {
       "matches": [
+        "https://www.google.com/*"
+      ],
+      "js": [
+        "js/google.js"
+      ],
+      "css": [
+        "css/google.css"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
         "http://weitz.de/*"
       ],
       "js": [
