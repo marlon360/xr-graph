@@ -5,6 +5,9 @@ import expressionToGlslString from './expression-to-glsl-string';
 export class MathExpression {
     constructor(input, parameters = ["u", "v", "x", "y", "t"]) {
 
+        this.Parser = new Parser();
+        this.Parser.consts.e = this.Parser.consts.E;
+
         let declarationPart, definitionPart;
 
         // if in form of f(x,y) = ... choose the parameters of function declaration
@@ -38,7 +41,7 @@ export class MathExpression {
         })
 
 
-        this.expression = Parser.parse(definitionPart)
+        this.expression = this.Parser.parse(definitionPart)
         this.inputSize = this.parameters.length;
 
         const parameterArray = new Array(this.inputSize).fill(0);
@@ -88,11 +91,11 @@ export class MathExpression {
     // private methods
     
     getAllVariables(input) {
-        return Parser.parse(input).variables();
+        return this.Parser.parse(input).variables();
     }
 
     getFunctionParameters(input) {
-        const tokens = Parser.parse(input).tokens;
+        const tokens = this.Parser.parse(input).tokens;
         let nstack = [];
         for (var i = 0; i < tokens.length; i++) {
             var item = tokens[i];
