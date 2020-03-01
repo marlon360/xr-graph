@@ -29,7 +29,7 @@ export class MathCurveMaterial {
             side: THREE.DoubleSide,
             fragmentShader: this.fragmentShader(),
             vertexShader: this.vertexShader()
-        })
+        })        
     }
 
     getGLSLFunctionString() {
@@ -71,7 +71,7 @@ export class MathCurveMaterial {
         varying vec3 vViewPosition;
         varying vec3 vNormal;
         
-        vec3 sample (float t) {
+        vec3 sample (${this.expression.getParameters().map((param) => `float ${param}`).join(",")}) {
           vec3 newpos = ${this.getGLSLFunctionString()};
           return newpos.xzy * vec3(1.0, 1.0, -1.0);;
         }
