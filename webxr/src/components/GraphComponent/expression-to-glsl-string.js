@@ -14,6 +14,8 @@ export default function expressionToGlslString(tokens) {
   var IENDSTATEMENT = 'IENDSTATEMENT';
   var IARRAY = 'IARRAY';
 
+  const E = 2.718281828459045;
+
   var nstack = [];
   var n1, n2, n3;
   var f, args, argCount;
@@ -41,7 +43,15 @@ export default function expressionToGlslString(tokens) {
       n1 = nstack.pop();
       f = item.value;
       if (f === '^') {
-        nstack.push(Array.apply(null, Array(parseInt(n2))).map(() => n1).join("*"));
+        if (n1 == E) {
+          nstack.push('exp(' + n2 + ')');
+        } else {
+          if (isNaN(parseInt(n2))) {
+            nstack.push('pow(' + n1 + ', ' + n2 + ')');
+          } else {
+            nstack.push(Array.apply(null, Array(parseInt(n2))).map(() => n1).join("*"));
+          }
+        }
       } else if (f === 'and') {
         nstack.push('(!!' + n1 + ' && !!' + n2 + ')');
       } else if (f === 'or') {
