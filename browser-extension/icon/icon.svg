@@ -1,3 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21.333 21.333"><defs><path d="M20 10.67C20 15.82 15.82 20 10.67 20C5.52 20 1.33 15.82 1.33 10.67C1.33 5.52 5.52 1.33 10.67 1.33C15.82 1.33 20 5.52 20 10.67Z" id="atKXD8TBk"></path><path d="M17.33 10.67C17.33 14.35 14.35 17.33 10.67 17.33C6.99 17.33 4 14.35 4 10.67C4 6.99 6.99 4 10.67 4C14.35 4 17.33 6.99 17.33 10.67Z" id="bdyMKJsCv"></path></defs><g visibility="inherit"><g visibility="inherit"><g visibility="inherit"><use xlink:href="#atKXD8TBk" opacity="1" fill="#808080" fill-opacity="1"></use></g><g visibility="inherit"><use xlink:href="#bdyMKJsCv" opacity="1" fill="#ffffff" fill-opacity="1"></use></g></g></g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512px" height="512px" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="66.8288586%" y1="0%" x2="22.204392%" y2="92.5781973%" id="linearGradient-1">
+            <stop stop-color="#40BBFF" offset="0%"></stop>
+            <stop stop-color="#9740FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" stroke="url(#linearGradient-1)" stroke-width="30" fill="#282828" cx="255" cy="256" r="241"></circle>
+        <path d="M257,343 L214.758419,343 L174.187408,277.184679 L133.616398,343 L94,343 L151.873353,253.262654 L97.6991215,169 L138.508785,169 L176.096633,231.601915 L212.968521,169 L252.823572,169 L198.052709,255.28591 L257,343 Z M315,246 L326.886305,246 C338.534942,246 347.132617,244.05656 352.679587,240.16962 C358.226557,236.282681 361,230.174725 361,221.84557 C361,213.595739 358.167126,207.725756 352.501292,204.235443 C346.835458,200.74513 338.059491,199 326.173127,199 L315,199 L315,246 Z M314.892123,276.232558 L314.892123,343 L278,343 L278,169 L328.696918,169 C352.33973,169 369.833562,173.304335 381.178938,181.913133 C392.524315,190.521931 398.196918,203.59362 398.196918,221.128591 C398.196918,231.363936 395.380451,240.468496 389.747432,248.442544 C384.114412,256.416593 376.141033,262.66482 365.827055,267.187415 C392.008693,306.303889 409.06617,331.574498 417,343 L376.061644,343 L334.528253,276.232558 L314.892123,276.232558 Z" id="XR" fill="#FFFFFF"></path>
+    </g>
+</svg>
