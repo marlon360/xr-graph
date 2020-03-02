@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "XR Graph - Browser Integration",
-  "description": "",
+  "description": "This extension adds a button to websites which display math graphs to directly open them in xr-graph.now.sh. Currently supported websites are: google.com, weitz.de/plot, wolframalpha.com.",
   "version": "1.0.0",
   "icons": {
     "16": "icon/icon-16.png",
@@ -14,11 +14,8 @@
       "19": "icon/icon-19.png",
       "38": "icon/icon-38.png"
     },
-    "default_title": "XR Graph - Browser Integration"
-  },
-  "options_ui": {
-    "page": "html/options.html",
-    "chrome_style": true
+    "default_title": "XR Graph - Browser Integration",
+    "default_popup": "html/popup.html"
   },
   "content_scripts": [
     {
@@ -58,11 +55,5 @@
       "run_at": "document_end"
     }
   ],
-  "permissions": [
-    "tabs",
-    "contextMenus",
-    "webRequest",
-    "webRequestBlocking",
-    "<all_urls>"
-  ]
+  "permissions": []
 }

@@ -1,28 +1,9 @@
 body {
-    width: 480px;
+    width: 580px;
+    padding: 0.5em 1em;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.tab {
-    display: flex;
-}
-
-.tab__item {
-    display: block;
-    padding: 0.5em;
-}
-
-.tab__title,
-.tab__url {
-    width: 50%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.tab__focus {
-    color: #0000ff;
-}
-
-.tab__close {
-    color: #ff0000;
+h1 {
+    margin: 0.2em 0;
 }
