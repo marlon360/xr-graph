@@ -7,6 +7,12 @@ With the provided browser extension you can view functions directly from [https:
 
 ![AR](./media/ar.gif)
 
+## Browser Extensions
+
+Firefox: [XR Graph - Browser Integration](https://addons.mozilla.org/de/firefox/addon/xr-graph-browser-integration/)
+
+Chrome: [XR Graph - Browser Integration](https://chrome.google.com/webstore/detail/xr-graph-browser-integrat/mkapnmjibodohclhpalpcohdibinijfi?hl=de)
+
 ## How to run locally
 0. Requirements
     - Node.js
