@@ -6,7 +6,7 @@
   "homepage": "",
   "devDependencies": {
     "svgexport": "^0.4.0",
-    "web-ext": "^4.1.0"
+    "web-ext": "^4.3.0"
   },
   "scripts": {
     "run": "web-ext run",
