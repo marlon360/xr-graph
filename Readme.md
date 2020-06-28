@@ -9,9 +9,9 @@ With the provided browser extension you can view functions directly from [https:
 
 ## Browser Extensions
 
-Firefox: [XR Graph - Browser Integration](https://addons.mozilla.org/de/firefox/addon/xr-graph-browser-integration/)
+Firefox: [XR Graph - Browser Integration](https://addons.mozilla.org/en-US/firefox/addon/xr-graph-browser-integration/)
 
-Chrome: [XR Graph - Browser Integration](https://chrome.google.com/webstore/detail/xr-graph-browser-integrat/mkapnmjibodohclhpalpcohdibinijfi?hl=de)
+Chrome: [XR Graph - Browser Integration](https://chrome.google.com/webstore/detail/xr-graph-browser-integrat/mkapnmjibodohclhpalpcohdibinijfi?hl=en)
 
 ## How to run locally
 0. Requirements
