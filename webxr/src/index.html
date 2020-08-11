@@ -93,7 +93,7 @@
     vrElements.forEach((el) => {
       el.setAttribute("visible", "true")
     });
-    if (scene.isAR) {
+    if (scene.is('ar-mode')) {
       environment.setAttribute("environment", {
         active: false
       })
