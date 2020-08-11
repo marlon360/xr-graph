@@ -11,6 +11,10 @@ module.exports = {
         use: ["html-loader"]
       },
       {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
         test: /\.(svg|png|jpg|gif|patt)$/,
         use: {
           // The file-loader resolves import/require() on a file into a url and emits the file into the output directory.

@@ -18,6 +18,8 @@ require('./components/GraphParameterUIComponent/graph-parameter-ui.component');
 require('./components/GraphVariableUIComponent/graph-variable-ui.component');
 require('./components/TextComponent/text.component');
 
+import './styles/vr.css';
+
 AFRAME.registerComponent('interaction-hands', {
     init: function () {
         this.otherHand = null;

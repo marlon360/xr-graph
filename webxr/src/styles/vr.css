@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.menu-icon {
+    position: fixed;
+    top: 1em;
+    left: 1.9em;
+    z-index: 2;
+    cursor: pointer;
+}
+.menu {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.7);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 320px;
+    z-index: 1;
+    color: white;
+    padding: 2em;
+    padding-top: 4em;
+    transition: all 400ms ease-in-out;
+}
+.menu.closed {
+    transform: translateX(-100%);
+}
+.menu-inner {
+    overflow: auto;
+    height: 100%;
+}
+.menu h1 {
+    margin-top: 0.4em;
+}
+.menu h2 {
+    margin-top: 2em;
+}
+
+.menu input {
+    background: none;
+    color: white;
+    border: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid white;
+    font-weight: bold;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.menu button, .menu .button {
+    background: white;
+    color: black;
+    border: 0;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 0.4em 0.7em;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+}
+.menu button:hover, .menu .button:hover {
+    background: rgb(230, 230, 230);
+}
+.menu button:active, .menu .button:active {
+    background: rgb(196, 196, 196);
+}
+
+.menu a {
+    color: white;
+}
+
+.examples a {
+    display: block;
+    margin: 1em 0;
+}

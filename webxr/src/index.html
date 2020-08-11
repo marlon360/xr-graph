@@ -14,13 +14,48 @@
 </head>
 
 <body>
+  <div class="menu-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px"><linearGradient id="EIPc0qTNCX0EujYwtxKaXa" x1="12.066" x2="34.891" y1=".066" y2="22.891" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#63BFFF"/><stop offset="1" stop-color="#9446FF"/></linearGradient><path fill="url(#EIPc0qTNCX0EujYwtxKaXa)" d="M43,15H5c-1.1,0-2-0.9-2-2v-2c0-1.1,0.9-2,2-2h38c1.1,0,2,0.9,2,2v2C45,14.1,44.1,15,43,15z"/><linearGradient id="EIPc0qTNCX0EujYwtxKaXb" x1="12.066" x2="34.891" y1="12.066" y2="34.891" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#63BFFF"/><stop offset="1" stop-color="#9446FF"/></linearGradient><path fill="url(#EIPc0qTNCX0EujYwtxKaXb)" d="M43,27H5c-1.1,0-2-0.9-2-2v-2c0-1.1,0.9-2,2-2h38c1.1,0,2,0.9,2,2v2C45,26.1,44.1,27,43,27z"/><linearGradient id="EIPc0qTNCX0EujYwtxKaXc" x1="12.066" x2="34.891" y1="24.066" y2="46.891" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#63BFFF"/><stop offset="1" stop-color="#9446FF"/></linearGradient><path fill="url(#EIPc0qTNCX0EujYwtxKaXc)" d="M43,39H5c-1.1,0-2-0.9-2-2v-2c0-1.1,0.9-2,2-2h38c1.1,0,2,0.9,2,2v2C45,38.1,44.1,39,43,39z"/></svg>
+  </div>
+  <div class="menu closed">
+    <div class="menu-inner">
+      <h1>XR Graph</h1>
+      <h2>Function:</h2>
+      <input class="function-input" type="text">
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="update-button">Update</button>
+      </div>
+      <p>
+        How to write a function:<br>
+        Declare parameters with <em>f(u,v)</em><br>
+        Declare a vector with square brackets <em>[x,y,z]</em>
+      </p>
+      <h2>Examples:</h2>
+      <div class="examples">
+        <a href="?function=f(t)%3D[cos(t),sin(t),t]">f(t)=[cos(t), sin(t), t]</a>
+        <a href="?function=f(u,v)%3D[u,v,u*v*0.1]">f(u,v)=[u, v, u*v*0.1]</a>
+        <a href="?function=f(u,v)%3D[cos(u),sin(v),2 * cos(v)]">f(u,v)=[cos(u),sin(v),2 * cos(v)]</a>
+        <a href="?function=[sin(t)%20+%202%20*%20sin(2*t),%20cos(t)%20-%202%20*%20cos(2*t),%20-sin(3*t)]&tMin=0&tMax=6.3&aMin=0&aMax=3&a=1.5&bMin=0&bMax=3&b=1.5">Trefoil Knot</a>
+        <a href="?function=[(a+b*u*cos(0.5*v))*cos(v),%20(a+b*u*cos(0.5*v))*sin(v),%20b*u*sin(0.5*v)]&uMin=-0.5&uMax=0.5&vMin=0&vMax=6.283185307179586&xMin=-1.3231280219206423&xMax=1.8&yMin=-1.6624317662557717&yMax=1.6624317662557717&aMin=1&aMax=2&a=1.5384151615841295&bMin=0.2&bMax=1.5&b=0.9618813442348404">Möbius strip</a>
+        <a href="?function=[b%20*%20u%20*%20cos(a%20*%20v),%20b%20*%20u%20*%20sin(a%20*%20v),%200.2%20*%20v]&uMin=-2&uMax=2&vMin=-10&vMax=10&xMin=-2&xMax=2&yMin=-1.9999311713564978&yMax=1.9999311713564978&aMin=0&aMax=1.1&a=0.8800000000000001&bMin=0&bMax=1&b=0.8">Helicoid</a>
+        <a href="?function=[cos(u)%20*%20(a%20+%20b%20*%20cos(v)),%20sin(u)%20*%20(a%20+%20b%20*%20cos(v)),%20b%20*%20sin(v)]&uMin=0&uMax=6.283185307179586&vMin=0&vMax=6.283185307179586&xMin=-2&xMax=2&yMin=-2&yMax=2&aMin=0&aMax=2&a=1.3&bMin=0&bMax=1&b=0.3">Torus</a>
+      </div>
+
+      <h2>Browser Addons:</h2>
+      <a target="_blank" href="https://addons.mozilla.org/en-US/firefox/addon/xr-graph-browser-integration/" class="button">Get Firefox Addon</a>
+      <a target="_blank" href="https://chrome.google.com/webstore/detail/xr-graph-browser-integrat/mkapnmjibodohclhpalpcohdibinijfi?hl=en" class="button">Get Chrome Addon</a>
+
+      <h2>Support</h2>
+      <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#29abe0', 'Q5Q71M4SL');kofiwidget2.draw();</script> 
+    </div>
+  </div>
   <a-scene shadow="type: pcfsoft"  cursor="rayOrigin:mouse" physics="driver: local; debug: true; gravity: 0; friction: 0; restitution: 0;" renderer="antialias: true" cursor="rayOrigin: mouse" raycaster="objects: [my-slider]">
     <a-assets>
       <a-mixin id="touch" class="hands" ></a-mixin>
     </a-assets>
 
     <!-- <a-sky color="#444"></a-sky> -->
-    <a-entity environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 0.97; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
+    <a-entity class="environment" environment="groundTexture: none; grid: 1x1; gridColor: #222; ground: flat; lighting: none; skyType: color; skyColor: #222; fog: 0.97; horizonColor: #222; groundColor: #333; groundColor2: #fff"></a-entity>
 
       <a-entity data-aabb-collider-dynamic="true" class="grabbable" id="plot" scale="0.5 0.5 0.5" position="0 1 -0.6" graph="uMin: -6.2; uMax: 6.2; vMin: -6.2; vMax: 6.2; showBoundingBox: true; showBoundingLabels: false; showWireframe: false; function: f(u,v) = [u, v, a * cos(v) + b * sin(u)]"></a-entity >
       
@@ -52,15 +87,24 @@
 <script>
 
   const scene = document.querySelector('a-scene');
-  const vrElements = document.querySelectorAll(".visible-on-vr")
+  const vrElements = document.querySelectorAll(".visible-on-vr");
+  const environment = document.querySelector(".environment");
   scene.addEventListener("enter-vr", () => {
     vrElements.forEach((el) => {
       el.setAttribute("visible", "true")
-    })
+    });
+    if (scene.isAR) {
+      environment.setAttribute("environment", {
+        active: false
+      })
+    }
   })
   scene.addEventListener("exit-vr", () => {
     vrElements.forEach((el) => {
       el.setAttribute("visible", "false")
+    });
+    environment.setAttribute("environment", {
+      active: true
     })
   })
 
@@ -116,6 +160,15 @@
   }
 
   plot.setAttribute('graph', getAllGetParameters());
+
+  document.querySelector('.function-input').value = plot.components["graph"].data.function;
+  document.querySelector('.update-button').addEventListener('click', () => {
+    window.location.href = '?function=' + encodeURIComponent(document.querySelector('.function-input').value);
+  })
+
+  document.querySelector('.menu-icon').addEventListener('click', () => {
+    document.querySelector('.menu').classList.toggle('closed');
+  })
 
   // var a = 1;
 
