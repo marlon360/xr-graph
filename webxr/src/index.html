@@ -188,7 +188,8 @@
   }
 
   document.querySelector(".enter-ar").addEventListener("click", () => {
-    window.location.href = 'ar.html?function=' + encodeURIComponent(document.querySelector('.function-input').value);
+    let params = Object.entries(plot.getAttribute("graph")).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
+    window.location.href = 'ar.html?' + params;
   });
 
   // var a = 1;
