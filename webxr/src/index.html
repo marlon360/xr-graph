@@ -171,8 +171,14 @@
   })
 
   function checkARSupport() {
+    if (navigator.xr == null) {
+      return false;
+    }
+    if (navigator.xr.supportsSession == null) {
+      return false;
+    }
     // Check to see if the UA can support an AR sessions.
-    return navigator.xr != null && navigator.xr.supportsSession('immersive-ar')
+    return navigator.xr.supportsSession('immersive-ar')
         .then(() => { console.log("AR content is supported!"); })
         .catch((reason) => { console.log("AR content is not supported: " + reason); });
   }
