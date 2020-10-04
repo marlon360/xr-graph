@@ -1,5 +1,6 @@
 require('aframe');
-require('ar.js/aframe/build/aframe-ar')
+require('ar.js/aframe/build/aframe-ar');
+require('./components/gestures');
 require('./components/GraphComponent/Graph');
 
 
