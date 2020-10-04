@@ -49,6 +49,9 @@
       <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#29abe0', 'Q5Q71M4SL');kofiwidget2.draw();</script> 
     </div>
   </div>
+  <div class="enter-ar">
+    <button class="enter-ar-button" id="enter-ar"></button>
+  </div>
   <a-scene shadow="type: pcfsoft"  cursor="rayOrigin:mouse" physics="driver: local; debug: true; gravity: 0; friction: 0; restitution: 0;" renderer="antialias: true" cursor="rayOrigin: mouse" raycaster="objects: [my-slider]">
     <a-assets>
       <a-mixin id="touch" class="hands" ></a-mixin>
@@ -89,23 +92,20 @@
   const scene = document.querySelector('a-scene');
   const vrElements = document.querySelectorAll(".visible-on-vr");
   const environment = document.querySelector(".environment");
+  console.log(environment);
   scene.addEventListener("enter-vr", () => {
     vrElements.forEach((el) => {
       el.setAttribute("visible", "true")
     });
     if (scene.is('ar-mode')) {
-      environment.setAttribute("environment", {
-        active: false
-      })
+      environment.setAttribute("visible", "false")
     }
   })
   scene.addEventListener("exit-vr", () => {
     vrElements.forEach((el) => {
       el.setAttribute("visible", "false")
     });
-    environment.setAttribute("environment", {
-      active: true
-    })
+    environment.setAttribute("visible", "true")
   })
 
   const plot = document.querySelector("#plot");
@@ -169,6 +169,21 @@
   document.querySelector('.menu-icon').addEventListener('click', () => {
     document.querySelector('.menu').classList.toggle('closed');
   })
+
+  function checkARSupport() {
+    // Check to see if the UA can support an AR sessions.
+    return navigator.xr != null && navigator.xr.supportsSession('immersive-ar')
+        .then(() => { console.log("AR content is supported!"); })
+        .catch((reason) => { console.log("AR content is not supported: " + reason); });
+  }
+
+  if(checkARSupport()) {
+    document.querySelector(".enter-ar").style.display = "none";
+  }
+
+  document.querySelector(".enter-ar").addEventListener("click", () => {
+    window.location.href = 'ar.html?function=' + encodeURIComponent(document.querySelector('.function-input').value);
+  });
 
   // var a = 1;
 
