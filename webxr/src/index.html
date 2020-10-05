@@ -170,22 +170,22 @@
     document.querySelector('.menu').classList.toggle('closed');
   })
 
-  function checkARSupport() {
-    if (navigator.xr == null) {
-      return false;
-    }
-    if (navigator.xr.supportsSession == null) {
-      return false;
-    }
-    // Check to see if the UA can support an AR sessions.
-    return navigator.xr.supportsSession('immersive-ar')
-        .then(() => { console.log("AR content is supported!"); })
-        .catch((reason) => { console.log("AR content is not supported: " + reason); });
-  }
+  // function checkARSupport() {
+  //   if (navigator.xr == null) {
+  //     return false;
+  //   }
+  //   if (navigator.xr.supportsSession == null) {
+  //     return false;
+  //   }
+  //   // Check to see if the UA can support an AR sessions.
+  //   return navigator.xr.supportsSession('immersive-ar')
+  //       .then(() => { console.log("AR content is supported!"); })
+  //       .catch((reason) => { console.log("AR content is not supported: " + reason); });
+  // }
 
-  if(checkARSupport()) {
-    document.querySelector(".enter-ar").style.display = "none";
-  }
+  // if(checkARSupport()) {
+  //   document.querySelector(".enter-ar").style.display = "none";
+  // }
 
   document.querySelector(".enter-ar").addEventListener("click", () => {
     let params = Object.entries(plot.getAttribute("graph")).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
