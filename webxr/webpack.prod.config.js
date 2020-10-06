@@ -35,6 +35,7 @@ module.exports = merge(common, {
   },
   // Deletes the dist folder, so the new .js files wont stack and pollute the folder
   plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({
+    favicon: "./src/images/favicon.png",
     chunks: ['vr'],
     template: "./src/index.html",
     filename: "index.html",
@@ -42,6 +43,7 @@ module.exports = merge(common, {
     inject: 'head'
   }),
   new HtmlWebpackPlugin({
+    favicon: "./src/images/favicon.png",
     chunks: ['ar'],
     template: "./src/ar.html",
     filename: "ar.html",

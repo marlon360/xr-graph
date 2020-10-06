@@ -30,6 +30,7 @@ module.exports = merge(common, {
     }
   },
   plugins: [new HtmlWebpackPlugin({
+    favicon: "./src/images/favicon.png",
     chunks: ['vr'],
     template: "./src/index.html",
     filename: "index.html",
@@ -37,6 +38,7 @@ module.exports = merge(common, {
     inject: 'head'
   }),
   new HtmlWebpackPlugin({
+    favicon: "./src/images/favicon.png",
     chunks: ['ar'],
     template: "./src/ar.html",
     filename: "ar.html",
