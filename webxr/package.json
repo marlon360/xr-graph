@@ -1,7 +1,7 @@
 {
   "name": "webxr",
   "engines": {
-    "node": "18.x"
+    "node": "16.x"
   },
   "version": "1.0.0",
   "description": "",
@@ -39,7 +39,7 @@
     "aframe-log-component": "^1.0.7",
     "aframe-orbit-controls": "^1.2.0",
     "aframe-physics-extras": "^0.1.3",
-    "aframe-physics-system": "^4.0.1",
+    "aframe-physics-system": "^4.0.2",
     "aframe-plot-component": "^1.1.2",
     "aframe-ui-widgets": "^1.0.2",
     "ar.js": "^2.1.4",
