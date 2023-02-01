@@ -1,7 +1,7 @@
 {
   "name": "webxr",
   "engines": {
-    "node": "10.x"
+    "node": "18.x"
   },
   "version": "1.0.0",
   "description": "",
